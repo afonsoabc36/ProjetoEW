@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { getUCs } = require("../Controllers/UCsController");
+const { getUCs, getUCBySigla, insertUC, updateUC, deleteUC } = require("../Controllers/UCsController");
 
 // const verifyJWT = require("../middlewares/verifyJWT");
 
 // GetUsers
 router.get("/", getUCs);
+router.get("/:sigla", getUCBySigla);
+router.post("/", insertUC);
+router.put("/:sigla", updateUC);
+router.delete("/:sigla", deleteUC);
 
 module.exports = router;
