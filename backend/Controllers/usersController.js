@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password").exec();
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -12,14 +12,13 @@ const getUsers = async (req, res) => {
 
 const insertUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     const savedUser = await newUser.save();
@@ -38,7 +37,9 @@ const updateUser = async (req, res) => {
       updates.password = await bcrypt.hash(updates.password, 10);
     }
 
-    const updatedUser = await User.findOneAndUpdate({ email: email }, updates, { new: true }).exec();
+    const updatedUser = await User.findOneAndUpdate({ email: email }, updates, {
+      new: true,
+    }).exec();
     if (updatedUser) {
       res.json(updatedUser);
     } else {
@@ -67,5 +68,5 @@ module.exports = {
   getUsers,
   insertUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };

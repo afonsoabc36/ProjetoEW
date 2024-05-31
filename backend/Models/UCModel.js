@@ -56,7 +56,7 @@ const UCSchema = new Schema({
         enum: ["T", "P"],
       },
       data: {
-        type: Date,
+        type: String,
       },
       sumario: {
         type: [String],
