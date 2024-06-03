@@ -20,16 +20,14 @@ const UCSchema = new Schema({
     maxlength: 50,
   },
   docentes: [DocenteModel.schema],
-  horario: [
-    {
-      praticas: {
-        type: [String],
-      },
-      teoricas: {
-        type: [String],
-      },
+  horario: {
+    praticas: {
+      type: [String],
     },
-  ],
+    teoricas: {
+      type: [String],
+    },
+  },
   avaliacao: [
     {
       type: [String],

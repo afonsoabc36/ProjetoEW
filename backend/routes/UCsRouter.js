@@ -1,8 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { getUCs, getUCBySigla, insertUC, updateUC, deleteUC } = require("../Controllers/UCsController");
+const {
+  getUCs,
+  getUCBySigla,
+  insertUC,
+  updateUC,
+  deleteUC,
+} = require("../Controllers/UCsController");
 
-// const verifyJWT = require("../middlewares/verifyJWT");
+const verifyJWT = require("../middleware/veriftJWT");
+router.use(verifyJWT);
 
 // GetUsers
 router.get("/", getUCs);

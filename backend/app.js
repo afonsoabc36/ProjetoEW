@@ -5,11 +5,15 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const connectDB = require("./config/connectDB");
 require("dotenv").config();
+var cors = require("cors");
 
 var app = express();
 
+app.use(cors());
+
 connectDB();
 
+const authRouter = require("./routes/authRouter");
 const usersRouter = require("./routes/usersRouter");
 const UCsRouter = require("./routes/UCsRouter");
 
@@ -23,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
+app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/UCs", UCsRouter);
 
