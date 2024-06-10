@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthProvider";
 import Layout from "../layout/Layout";
 
-const PrivateRoute = ({ allowedRoles }) => {
+const ProtectedRoute = ({ allowedRoles }) => {
   const { token, user } = useAuth();
 
   if (!token) {
@@ -18,11 +18,7 @@ const PrivateRoute = ({ allowedRoles }) => {
     return <Navigate to="/unauthorized" />;
   }
 
-  return (
-    <Layout>
-      <Outlet />
-    </Layout>
-  );
+  return <Outlet />;
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;

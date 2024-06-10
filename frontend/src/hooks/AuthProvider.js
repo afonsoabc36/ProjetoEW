@@ -1,6 +1,7 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import authService from "../services/authService";
+import userService from "../services/userService";
 
 const AuthContext = createContext();
 
@@ -8,19 +9,27 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("accessToken") || "");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  //   useEffect(() => {
-  //     if (token) {
-  //       // Fetch user data or validate token here if needed
-  //       // Example:
-  //       // const fetchUserData = async () => {
-  //       //   const res = await authService.getUserData(token);
-  //       //   setUser(res.data);
-  //       // };
-  //       // fetchUserData();
-  //     }
-  //   }, [token]);
+  useEffect(() => {
+    if (token) {
+      const fetchUserData = async () => {
+        try {
+          const res = await userService.getUser(token);
+          setUser(res);
+        } catch (error) {
+          console.error("Failed to fetch user data", error);
+          setError("Unable to fetch user data. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchUserData();
+    } else {
+      setLoading(false);
+    }
+  }, [token]);
 
   const loginAction = async (data) => {
     try {
@@ -28,7 +37,7 @@ const AuthProvider = ({ children }) => {
       if (res.token) {
         localStorage.setItem("accessToken", res.token);
         setToken(res.token);
-        setUser(res.data); // Assuming the user data is returned here
+        setUser(res.data);
         navigate("/");
         return;
       } else {
@@ -46,6 +55,10 @@ const AuthProvider = ({ children }) => {
     setUser(null);
     navigate("/login");
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider value={{ token, user, error, loginAction, logOut }}>

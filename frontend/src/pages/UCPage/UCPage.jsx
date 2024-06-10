@@ -1,11 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import UCService from "../services/UCService";
+import UCService from "../../services/UCService";
+import { useAuth } from "../../hooks/AuthProvider";
+import Button from "../../components/common/Button";
 
 const UCPage = () => {
   const sigla = useParams().sigla;
   const [uc, setUC] = useState(null);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +27,13 @@ const UCPage = () => {
 
   return (
     <div className="min-w-full md:p-4">
+      <div className=" pb-5 flex justify-end">
+        {(user?.role === "admin" || user?.role === "teacher") && (
+          <Link to={`/uc/${sigla}/editar`}>
+            <Button>Editar</Button>
+          </Link>
+        )}
+      </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
         <div className="md:border-r pr-8">
           <div className="flex flex-col">

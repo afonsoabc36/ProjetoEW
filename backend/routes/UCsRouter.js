@@ -9,6 +9,7 @@ const {
 } = require("../Controllers/UCsController");
 
 const verifyJWT = require("../middleware/veriftJWT");
+const verifyRole = require("../middleware/verifyRole");
 router.use(verifyJWT);
 
 // GetUsers

@@ -30,7 +30,7 @@ const Input = ({
     className
   );
 
-  const underlineWidth = Math.max(100, value.length * 10);
+  const underlineWidth = Math.max(100, value?.length * 10);
 
   return (
     <div className="mb-6 relative">
@@ -39,17 +39,30 @@ const Input = ({
           {label}
         </label>
       )}
-      <input
-        id={id}
-        type={type}
-        placeholder={isFocused ? "" : placeholder}
-        value={value}
-        onChange={onChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        className={combinedClassNames}
-        {...props}
-      />
+      {type === "textarea" ? (
+        <textarea
+          id={id}
+          placeholder={isFocused ? "" : placeholder}
+          value={value}
+          onChange={onChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          className={`${combinedClassNames} h-32`}
+          {...props}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          placeholder={isFocused ? "" : placeholder}
+          value={value}
+          onChange={onChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          className={combinedClassNames}
+          {...props}
+        />
+      )}
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
     </div>
   );
@@ -60,8 +73,8 @@ Input.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
   placeholder: PropTypes.string,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
   className: PropTypes.string,
   error: PropTypes.string,
 };

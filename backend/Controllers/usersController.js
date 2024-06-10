@@ -1,6 +1,22 @@
 const User = require("../Models/UserModel");
 const bcrypt = require("bcrypt");
 
+// Get current user details
+const getUserDetails = async (req, res, next) => {
+  try {
+    console.log(req.user);
+    const user = await User.findOne({ email: req.user.email }).select(
+      "-password"
+    ); // Exclude password
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password").exec();
@@ -69,4 +85,5 @@ module.exports = {
   insertUser,
   updateUser,
   deleteUser,
+  getUserDetails,
 };

@@ -20,6 +20,11 @@ const getUC = async (sigla) => {
   }
 };
 
-const UCService = { getUCs, getUC };
+const updateUC = async (sigla, updatedUC) => {
+  const response = await api.put(`${API_URL}/${sigla}`, updatedUC);
+  return response.data;
+};
+
+const UCService = { getUCs, getUC, updateUC };
 
 export default UCService;
