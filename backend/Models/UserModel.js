@@ -15,6 +15,34 @@ const UserSchema = new mongoose.Schema(
       required: true,
       minlength: 2,
     },
+    name: {
+      type: String,
+      minlength: 2,
+    },
+    affiliation: {
+      type: String,
+      minlength: 2,
+    },
+    department: {
+      type: String,
+      minlength: 2,
+    },
+    course: {
+      type: String,
+      minlength: 2,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    lastAccess: {
+      type: Date,
+      default: Date.now,
+    },
+    avatar: {
+      type: String,
+      default: "https://www.gravatar.com/avatar/?d=mp",
+    },
     role: {
       type: String,
       enum: ["admin", "student", "teacher"],

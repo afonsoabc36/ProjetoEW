@@ -1,9 +1,24 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import UCService from "../services/UCService";
+import Button from "../components/common/Button";
+import { Link } from "react-router-dom";
+import Input from "../components/common/Input";
 
 const HomePage = () => {
   const [ucs, setUcs] = useState([]);
+  const [filteredUCs, setFilteredUCs] = useState([]);
+  const [searchUC, setSearchUC] = useState("");
+
+  useEffect(() => {
+    setFilteredUCs(
+      ucs.filter(
+        (uc) =>
+          uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
+          uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
+      )
+    );
+  }, [searchUC, ucs]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,9 +34,23 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  const onChangeSearch = (e) => {
+    setSearchUC(e.target.value);
+  };
+
   return (
-    <div>
-      {ucs?.map((uc) => (
+    <div className="p-4">
+      <h1 className="text-4xl text-center mt-8">Unidades Curriculares</h1>
+      <Input
+        type="search"
+        placeholder="Pesquisar UC"
+        className="w-full mt-4"
+        id="searchUC"
+        value={searchUC}
+        onChange={onChangeSearch}
+      />
+
+      {filteredUCs?.map((uc) => (
         <div
           key={uc._id}
           className="block bg-gray-600 m-4 border border-gray-500 rounded-lg shadow-xl transform transition duration-500 hover:scale-105 cursor-pointer"
@@ -38,6 +67,11 @@ const HomePage = () => {
           </div>
         </div>
       ))}
+      <div className="p-4">
+        <Link to="/uc/criar">
+          <Button className="w-full">Adicionar UC</Button>
+        </Link>
+      </div>
     </div>
   );
 };

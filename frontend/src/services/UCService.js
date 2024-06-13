@@ -25,6 +25,16 @@ const updateUC = async (sigla, updatedUC) => {
   return response.data;
 };
 
-const UCService = { getUCs, getUC, updateUC };
+const deleteUC = async (sigla) => {
+  const response = await api.delete(`${API_URL}/${sigla}`);
+  return response.data;
+};
+
+const createUC = async (newUC) => {
+  const response = await api.post(`${API_URL}`, newUC);
+  return response.data;
+};
+
+const UCService = { getUCs, getUC, updateUC, deleteUC, createUC };
 
 export default UCService;

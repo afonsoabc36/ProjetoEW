@@ -5,7 +5,7 @@ import { useAuth } from "../../hooks/AuthProvider";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 
-const EditarUCPage = () => {
+const EditarUCPage = ({ isNew = false }) => {
   const { sigla } = useParams();
   const [uc, setUC] = useState({
     sigla: "",
@@ -32,7 +32,9 @@ const EditarUCPage = () => {
         alert("Failed to fetch UC data");
       }
     };
-    fetchUC();
+    if (!isNew) {
+      fetchUC();
+    }
   }, [sigla]);
 
   const handleChange = (e) => {
@@ -61,6 +63,12 @@ const EditarUCPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (isNew) {
+        await UCService.createUC(uc);
+        alert("UC criada com sucesso");
+        navigate("/");
+        return;
+      }
       await UCService.updateUC(sigla, uc);
       alert("UC atualizada com sucesso");
       navigate(`/uc/${sigla}`);
@@ -83,7 +91,7 @@ const EditarUCPage = () => {
             value={uc.sigla}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded mt-2"
-            disabled
+            disabled={!isNew}
           />
         </div>
         <div className="mb-4">

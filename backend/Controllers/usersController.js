@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 // Get current user details
 const getUserDetails = async (req, res, next) => {
   try {
-    console.log(req.user);
     const user = await User.findOne({ email: req.user.email }).select(
       "-password"
     ); // Exclude password
@@ -28,13 +27,28 @@ const getUsers = async (req, res) => {
 
 const insertUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const {
+      email,
+      password,
+      name,
+      affiliation,
+      department,
+      course,
+      avatar,
+      role,
+    } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       email,
       password: hashedPassword,
+      name,
+      affiliation,
+      department,
+      course,
+      avatar,
+      role,
     });
 
     const savedUser = await newUser.save();
@@ -47,7 +61,18 @@ const insertUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const email = req.params.email;
-    const updates = req.body;
+    const { password, name, affiliation, department, course, avatar, role } =
+      req.body;
+
+    const updates = {
+      name,
+      affiliation,
+      department,
+      course,
+      avatar,
+      role,
+      password,
+    };
 
     if (updates.password) {
       updates.password = await bcrypt.hash(updates.password, 10);

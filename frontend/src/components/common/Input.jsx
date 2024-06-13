@@ -43,7 +43,7 @@ const Input = ({
         <textarea
           id={id}
           placeholder={isFocused ? "" : placeholder}
-          value={value}
+          value={value || ""}
           onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -55,7 +55,7 @@ const Input = ({
           id={id}
           type={type}
           placeholder={isFocused ? "" : placeholder}
-          value={value}
+          value={value || ""}
           onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -73,7 +73,6 @@ Input.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
   placeholder: PropTypes.string,
-  value: PropTypes.string,
   onChange: PropTypes.func,
   className: PropTypes.string,
   error: PropTypes.string,

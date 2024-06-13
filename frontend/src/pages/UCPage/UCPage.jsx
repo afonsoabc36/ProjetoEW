@@ -25,13 +25,28 @@ const UCPage = () => {
     fetchData();
   }, [sigla]);
 
+  const handleDeleteUC = async () => {
+    try {
+      await UCService.deleteUC(sigla);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Failed to delete UC", error);
+      alert("Failed to delete UC");
+    }
+  };
+
   return (
     <div className="min-w-full md:p-4">
       <div className=" pb-5 flex justify-end">
         {(user?.role === "admin" || user?.role === "teacher") && (
-          <Link to={`/uc/${sigla}/editar`}>
-            <Button>Editar</Button>
-          </Link>
+          <>
+            <Link to={`/uc/${sigla}/editar`}>
+              <Button>Editar UC</Button>
+            </Link>
+            <Button className="mx-2" variant="danger" onClick={handleDeleteUC}>
+              Apagar UC
+            </Button>
+          </>
         )}
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
