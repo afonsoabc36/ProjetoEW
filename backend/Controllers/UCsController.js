@@ -62,9 +62,25 @@ const deleteUC = async (req, res) => {
   }
 };
 
+const getDocentesBySigla = async (req, res) => {
+  try {
+    const sigla = req.params.sigla;
+    const uc = await UC.findOne({ sigla: sigla }).exec();
+    if (uc) {
+      res.json(uc.docentes);
+    } else {
+      res.status(404).json({ message: "UC not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 module.exports = {
   getUCs,
-  getUCBySigla, 
+  getUCBySigla,
+  getDocentesBySigla,
   insertUC, 
   updateUC, 
   deleteUC

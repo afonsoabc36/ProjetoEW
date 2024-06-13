@@ -4,11 +4,13 @@ import UCService from "../services/UCService";
 import Button from "../components/common/Button";
 import { Link } from "react-router-dom";
 import Input from "../components/common/Input";
+import { useAuth } from "../hooks/AuthProvider";
 
 const HomePage = () => {
   const [ucs, setUcs] = useState([]);
   const [filteredUCs, setFilteredUCs] = useState([]);
   const [searchUC, setSearchUC] = useState("");
+  const { token, user } = useAuth();
 
   useEffect(() => {
     setFilteredUCs(
@@ -67,11 +69,13 @@ const HomePage = () => {
           </div>
         </div>
       ))}
-      <div className="p-4">
-        <Link to="/uc/criar">
-          <Button className="w-full">Adicionar UC</Button>
-        </Link>
-      </div>
+      {user.role !== 'student' && (
+        <div className="p-4">
+          <Link to="/uc/criar">
+            <Button className="w-full">Adicionar UC</Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

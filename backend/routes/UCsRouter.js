@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   getUCs,
   getUCBySigla,
+  getDocentesBySigla,
   insertUC,
   updateUC,
   deleteUC,
@@ -15,6 +16,7 @@ router.use(verifyJWT);
 // GetUsers
 router.get("/", getUCs);
 router.get("/:sigla", getUCBySigla);
+router.get("/docentes/:sigla", getDocentesBySigla);
 router.post("/", insertUC);
 router.put("/:sigla", updateUC);
 router.delete("/:sigla", deleteUC);

@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/uc/:sigla" element={<UCPage />} />
           <Route
-            element={<ProtectedRoute allowedRoles={["admin", "teacher"]} />}
+            element={<ProtectedRoute allowedRoles={["admin", "teacher"]}/>}
           >
             <Route path="/uc/:sigla/editar" element={<EditarUCPage />} />
             <Route path="/uc/criar" element={<EditarUCPage isNew />} />

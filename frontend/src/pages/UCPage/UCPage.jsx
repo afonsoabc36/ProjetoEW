@@ -8,14 +8,16 @@ import Button from "../../components/common/Button";
 const UCPage = () => {
   const sigla = useParams().sigla;
   const [uc, setUC] = useState(null);
-
   const { user } = useAuth();
+
+  const isAdmin = user?.role === "admin";
+  const isTeacher = user?.role === "teacher";
+  const isDocente = uc?.docentes?.some(docente => docente.email === user.email);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await UCService.getUC(sigla);
-        console.log(data);
         setUC(data);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -38,7 +40,7 @@ const UCPage = () => {
   return (
     <div className="min-w-full md:p-4">
       <div className=" pb-5 flex justify-end">
-        {(user?.role === "admin" || user?.role === "teacher") && (
+        {(isAdmin || (isTeacher && isDocente)) && (
           <>
             <Link to={`/uc/${sigla}/editar`}>
               <Button>Editar UC</Button>
