@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
-import Button from "../components/common/Button";
 import Input from "../components/common/Input";
 import { useAuth } from "../hooks/AuthProvider";
+import Button from "../components/common/Button";
+import React, { useState, useEffect } from "react";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -33,35 +35,64 @@ const LoginPage = () => {
     }
   };
 
+  //GoogleAuth
+  const handleGoogleSuccess = async (response) => {
+    const tokenId = response.credential;
+    try {
+      await auth.googleLoginAction(tokenId); // Implement googleLoginAction in your auth context
+      if (auth.error) {
+        alert(auth.error);
+        return;
+      }
+    } catch (error) {
+      console.error("Failed to login with Google", error.message);
+      alert("Não foi possível iniciar sessão com o Google. Por favor, tente novamente.");
+    }
+  };
+
+  const handleGoogleFailure = (error) => {
+    console.error("Google login failed", error);
+    alert("Não foi possível iniciar sessão com o Google. Por favor, tente novamente.");
+  };
+
   return (
-    <div className="bg-dark min-h-screen p-14 text-white">
-      <h1 className="text-white font-bold text-3xl mb-4">Login</h1>
-      <form onSubmit={handleSubmit}>
-        <Input
-          type="email"
-          value={credentials.email}
-          id="email"
-          placeholder="Insira o seu email"
-          onChange={onChange}
-        />
-        <Input
-          type="password"
-          value={credentials.password}
-          id="password"
-          placeholder="Insira a sua palavra-passe"
-          onChange={onChange}
-        />
-        {/* <span>
-          Não estás registado?{" "}
-          <a href="/register" className="text-blue-400">
-            Regista-te
-          </a>
-        </span> */}
-        <Button className="mt-4 min-w-full" type="submit">
-          Entrar
-        </Button>
-      </form>
-    </div>
+    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID}>
+      <div className="bg-dark min-h-screen p-14 text-white">
+        <h1 className="text-white font-bold text-3xl mb-4">Login</h1>
+        <form onSubmit={handleSubmit}>
+          <Input
+            type="email"
+            value={credentials.email}
+            id="email"
+            placeholder="Insira o seu email"
+            onChange={onChange}
+          />
+          <Input
+            type="password"
+            value={credentials.password}
+            id="password"
+            placeholder="Insira a sua palavra-passe"
+            onChange={onChange}
+          />
+          {/* <span>
+            Não estás registado?{" "}
+            <a href="/register" className="text-blue-400">
+              Regista-te
+            </a>
+          </span> */}
+          <Button className="mt-4 min-w-full" type="submit">
+            Entrar
+          </Button>
+        </form>
+        <div className="mt-4">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onFailure={handleGoogleFailure}
+            buttonText="Entrar com Google"
+          />
+        </div>
+      </div>
+    </GoogleOAuthProvider>
   );
 };
 

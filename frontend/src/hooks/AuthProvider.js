@@ -49,6 +49,24 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleLoginAction = async (tokenId) => {
+    try {
+      const res = await authService.googleLogin(tokenId);
+      if (res.token) {
+        localStorage.setItem("accessToken", res.token);
+        setToken(res.token);
+        setUser(res.data);
+        navigate("/");
+        return;
+      } else {
+        setError("Google login failed");
+      }
+    } catch (error) {
+      console.error("Failed to login with Google", error.message);
+      setError("Unable to login with Google. Please try again.");
+    }
+  };
+
   const logOut = () => {
     setToken("");
     localStorage.removeItem("accessToken");
@@ -61,7 +79,7 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ token, user, error, loginAction, logOut }}>
+    <AuthContext.Provider value={{ token, user, error, loginAction, googleLoginAction, logOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,10 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UCService from "../services/UCService";
-import Button from "../components/common/Button";
-import { Link } from "react-router-dom";
 import Input from "../components/common/Input";
 import { useAuth } from "../hooks/AuthProvider";
+import Button from "../components/common/Button";
 
 const HomePage = () => {
   const [ucs, setUcs] = useState([]);
