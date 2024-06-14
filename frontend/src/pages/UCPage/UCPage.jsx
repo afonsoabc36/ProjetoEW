@@ -1,15 +1,10 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UCService from "../../services/UCService";
 import { useAuth } from "../../hooks/AuthProvider";
+import { Link, useParams } from "react-router-dom";
 import Button from "../../components/common/Button";
-
-const capitalizeFirstLetter = (string) => {
-  if (!string) return string;
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-};
-
+import { capitalizeFirstLetter } from "../../services/prettierService";
 
 const UCPage = () => {
   const sigla = useParams().sigla;
@@ -44,26 +39,35 @@ const UCPage = () => {
   };
 
   return (
-    <div className="min-w-full md:p-4">
-      <div className=" pb-5 flex justify-end">
-        {(isAdmin || (isTeacher && isDocente)) && (
-          <>
-            <Link to={`/uc/${sigla}/editar`}>
-              <Button>Editar UC</Button>
-            </Link>
-            <Button className="mx-2" variant="danger" onClick={handleDeleteUC}>
-              Apagar UC
-            </Button>
-          </>
-        )}
+    <div className="min-w-full sm:px-2 sm:py-2 md:px-0 md:py-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
+        <div className="flex flex-col md:items-start md:pl-4 md:pr-8">
+          <h1 className="font-bold text-3xl text-primary">{uc?.sigla}</h1>
+          <h2 className="text-lg mt-4">{uc?.titulo}</h2>
+        </div>
+        <div className="pb-5 flex-row justify-end md:mt-10">
+          {(isAdmin || (isTeacher && isDocente)) && (
+            <div className="mt-4 md:mt-0 md:ml-10">
+              <Link to={`/uc/${sigla}/editar`}>
+                <Button variant="primary">Editar UC</Button>
+              </Link>
+              <Button
+                className="mx-2 mt-2 md:mt-0"
+                variant="danger"
+                onClick={handleDeleteUC}
+              >
+                Apagar UC
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
         <div className="md:border-r pr-8">
-          <div className="flex flex-col">
-            <h1 className="font-bold text-3xl text-primary">{uc?.sigla}</h1>
-            <h2 className="text-lg mt-4">{uc?.titulo}</h2>
-          </div>
-          <div className="overflow-x-auto mt-8">
+          <h3 className="text-2xl mt-2 text-center font-bold mr-0 p-2 text-primary">
+            Docentes
+          </h3>
+          <div className="overflow-x-auto mt-4">
             <table className="w-full text-sm text-left text-white bg-gray-900">
               <thead className="uppercase text-xs bg-gray-700">
                 <tr>
@@ -129,7 +133,7 @@ const UCPage = () => {
         </div>
 
         <div className="p-2">
-          <h3 className="font-bold text-2xl text-center">Sumários</h3>
+          <h3 className="font-bold text-2xl text-center text-primary mt-2">Sumários</h3>
 
           {uc?.aulas?.map((aula) => {
             return (
