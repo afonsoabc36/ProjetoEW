@@ -5,6 +5,12 @@ import UCService from "../../services/UCService";
 import { useAuth } from "../../hooks/AuthProvider";
 import Button from "../../components/common/Button";
 
+const capitalizeFirstLetter = (string) => {
+  if (!string) return string;
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
+
+
 const UCPage = () => {
   const sigla = useParams().sigla;
   const [uc, setUC] = useState(null);
@@ -104,7 +110,7 @@ const UCPage = () => {
               <div className="text-gray-400">
                 {uc?.horario.teoricas.map((aula) => (
                   <div key={aula} className="p-4">
-                    <span>{aula}</span>
+                    <span>{capitalizeFirstLetter(aula)}</span>
                   </div>
                 ))}
               </div>
@@ -114,7 +120,7 @@ const UCPage = () => {
               <div className="text-gray-400">
                 {uc?.horario.praticas.map((aula) => (
                   <div key={aula} className="p-4">
-                    <span>{aula}</span>
+                    <span>{capitalizeFirstLetter(aula)}</span>
                   </div>
                 ))}
               </div>

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import UCService from "../../services/UCService";
-import { useAuth } from "../../hooks/AuthProvider";
-import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import { useAuth } from "../../hooks/AuthProvider";
+import React, { useEffect, useState } from "react";
+import Button from "../../components/common/Button";
+import { useParams, useNavigate } from "react-router-dom";
 
 const EditarUCPage = ({ isNew = false }) => {
   const { sigla } = useParams();
@@ -80,7 +80,9 @@ const EditarUCPage = ({ isNew = false }) => {
 
   return (
     <div className="min-w-full md:p-4">
-      <h1 className="text-2xl font-bold mb-4">Edit UC</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        {isNew ? 'Create UC' : 'Edit UC'}
+      </h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-white">Sigla:</label>
@@ -341,7 +343,9 @@ const EditarUCPage = ({ isNew = false }) => {
           </div>
         </div>
         <div className="flex justify-end">
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit">
+            {isNew ? 'Create UC' : 'Save Changes'}
+          </Button>
         </div>
       </form>
     </div>
