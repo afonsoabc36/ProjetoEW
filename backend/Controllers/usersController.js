@@ -25,6 +25,22 @@ const getUsers = async (req, res) => {
   }
 };
 
+const getUserByEmail = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const user = await User.findOne({ email: email })
+      .select("-password")
+      .exec();
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const insertUser = async (req, res) => {
   try {
     const {
@@ -52,8 +68,10 @@ const insertUser = async (req, res) => {
     });
 
     const savedUser = await newUser.save();
+
     res.status(201).json(savedUser);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -74,10 +92,15 @@ const updateUser = async (req, res) => {
       password,
     };
 
-    if (updates.password) {
-      updates.password = await bcrypt.hash(updates.password, 10);
+    console.log(req.file);
+
+    if (req.file) {
+      updates.avatar = `${req.file.path}`;
     }
 
+    if (password) {
+      updates.password = await bcrypt.hash(updates.password, 10);
+    }
     const updatedUser = await User.findOneAndUpdate({ email: email }, updates, {
       new: true,
     }).exec();
@@ -111,4 +134,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserDetails,
+  getUserByEmail,
 };

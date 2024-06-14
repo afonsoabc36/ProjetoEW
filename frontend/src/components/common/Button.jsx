@@ -19,6 +19,8 @@ const Button = ({
     nobg: "text-white hover:text-primary",
     danger:
       "bg-red-700 border-2 border-transparent text-white hover:bg-dark hover:border-red-500 hover:border-2",
+    warning:
+      "bg-yellow-500 border-2 border-transparent text-black hover:bg-dark hover:text-yellow-500 hover:border-yellow-500 hover:border-2",
   };
   const sizeStyles = {
     sm: "px-2 py-1 text-sm",
@@ -51,7 +53,7 @@ const Button = ({
 Button.propTypes = {
   type: PropTypes.oneOf(["button", "submit", "reset"]),
   className: PropTypes.string,
-  variant: PropTypes.oneOf(["primary", "nobg", "danger"]),
+  variant: PropTypes.oneOf(["primary", "nobg", "danger", "warning"]),
   size: PropTypes.oneOf(["sm", "md", "lg"]),
   disabled: PropTypes.bool,
 };

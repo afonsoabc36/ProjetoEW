@@ -21,6 +21,7 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
           console.error("Failed to fetch user data", error);
           setError("Unable to fetch user data. Please try again.");
+          throw Error(error);
         } finally {
           setLoading(false);
         }
@@ -46,6 +47,7 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Failed to login", error.message);
       setError("Unable to login. Please try again.");
+      throw Error(error);
     }
   };
 
@@ -79,7 +81,9 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ token, user, error, loginAction, googleLoginAction, logOut }}>
+    <AuthContext.Provider
+      value={{ token, user, error, loginAction, googleLoginAction, logOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

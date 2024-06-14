@@ -13,23 +13,18 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 2,
     },
     name: {
       type: String,
-      minlength: 2,
     },
     affiliation: {
       type: String,
-      minlength: 2,
     },
     department: {
       type: String,
-      minlength: 2,
     },
     course: {
       type: String,
-      minlength: 2,
     },
     createdAt: {
       type: Date,
@@ -57,6 +52,11 @@ UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
+
+  if (!this.avatar) {
+    this.avatar = `https://www.gravatar.com/avatar/?d=mp`;
+  }
+
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });

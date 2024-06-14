@@ -4,7 +4,6 @@ import Button from "../components/common/Button";
 import React, { useState, useEffect } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
-
 const LoginPage = () => {
   const auth = useAuth();
 
@@ -25,10 +24,6 @@ const LoginPage = () => {
 
     try {
       await auth.loginAction(credentials);
-      if (auth.error) {
-        alert(auth.error);
-        return;
-      }
     } catch (error) {
       console.error("Failed to login", error.message);
       alert("Não foi possível iniciar sessão. Por favor, tente novamente.");
@@ -46,13 +41,17 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error("Failed to login with Google", error.message);
-      alert("Não foi possível iniciar sessão com o Google. Por favor, tente novamente.");
+      alert(
+        "Não foi possível iniciar sessão com o Google. Por favor, tente novamente."
+      );
     }
   };
 
   const handleGoogleFailure = (error) => {
     console.error("Google login failed", error);
-    alert("Não foi possível iniciar sessão com o Google. Por favor, tente novamente.");
+    alert(
+      "Não foi possível iniciar sessão com o Google. Por favor, tente novamente."
+    );
   };
 
   return (

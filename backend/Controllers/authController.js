@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../Models/UserModel");
-const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client } = require("google-auth-library");
 
 const register = async (req, res) => {
   const { email, password, role } = req.body;
@@ -40,7 +40,10 @@ const login = async (req, res) => {
   }
 };
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
+const client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 const googleLogin = async (req, res) => {
   const { tokenId } = req.body;
@@ -71,4 +74,4 @@ const googleLogin = async (req, res) => {
   }
 };
 
-module.exports = { register, login , googleLogin};
+module.exports = { register, login, googleLogin };

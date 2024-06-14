@@ -1,16 +1,31 @@
 import React from "react";
 import { useAuth } from "../hooks/AuthProvider";
+import Button from "../components/common/Button";
+import { Link } from "react-router-dom";
+import Image from "../components/common/Image";
 
 const ProfilePage = () => {
   const { user } = useAuth();
 
-  console.log("user", user);
-
   return (
     <div className="p-4">
       <div className="bg-gray-700 rounded-lg shadow-xl p-4">
-        <h1 className="text-3xl py-4 font-bold">Perfil</h1>
+        <div className="flex justify-between">
+          <h1 className="text-3xl py-4 font-bold">Perfil</h1>
+          <Link to="/perfil/editar">
+            <Button variant="primary" className="mb-4">
+              Editar Perfil
+            </Button>
+          </Link>
+        </div>
         <div>
+          <div>
+            <Image
+              url={user?.avatar}
+              alt={user?.name}
+              className="w-32 h-32 rounded-full mx-auto"
+            />
+          </div>
           <div className="py-4">
             <label className="text-xl font-bold">Nome:</label>
             <p>{user?.name || "N/A"}</p>

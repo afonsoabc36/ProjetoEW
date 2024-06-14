@@ -3,7 +3,6 @@ import { useAuth } from "../../hooks/AuthProvider";
 import React, { useEffect, useState } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 
-
 const ProtectedRoute = ({ allowedRoles }) => {
   const { token, user } = useAuth();
   const { sigla } = useParams();
@@ -15,7 +14,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
         const docentesData = await UCService.getDocentes(sigla);
         setDocentes(docentesData);
       } catch (error) {
-        console.error('Failed to fetch docentes:', error);
+        console.error("Failed to fetch docentes:", error);
       }
     };
 
@@ -37,9 +36,9 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   const isAllowedRole = allowedRoles.includes(user.role);
-  const isDocente = docentes?.some(docente => docente.email === user.email);
+  const isDocente = docentes?.some((docente) => docente.email === user.email);
 
-  if (!isAllowedRole || (!isDocente && sigla)) {
+  if (!isAllowedRole || (user.role == "teacher" && !isDocente && sigla)) {
     return <Navigate to="/unauthorized" />;
   }
 

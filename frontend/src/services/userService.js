@@ -17,10 +17,34 @@ export const getAllUsers = async () => {
   return response.data;
 };
 
+export const getUserByEmail = async (email) => {
+  const response = await api.get(`${USER_URL}/${email}`);
+  return response.data;
+};
+
+export const deleteAUser = async (email) => {
+  const response = await api.delete(`${USER_URL}/${email}`);
+  return response.data;
+};
+
+export const createAUser = async (data) => {
+  const response = await api.post(`${USER_URL}`, data);
+  return response.data;
+};
+
+export const updateAUser = async (email, data) => {
+  const response = await api.put(`${USER_URL}/${email}`, data);
+  return response.data;
+};
+
 const userService = {
   getUser,
   updateUser,
   getAllUsers,
+  deleteAUser,
+  createAUser,
+  updateAUser,
+  getUserByEmail,
 };
 
 export default userService;

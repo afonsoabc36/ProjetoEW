@@ -6,6 +6,7 @@ var logger = require("morgan");
 const connectDB = require("./config/connectDB");
 require("dotenv").config();
 var cors = require("cors");
+const bodyParser = require("body-parser");
 
 var app = express();
 
@@ -20,6 +21,8 @@ const UCsRouter = require("./routes/UCsRouter");
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -30,6 +33,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/UCs", UCsRouter);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.all("*", (req, res) => {
   res.status(404);

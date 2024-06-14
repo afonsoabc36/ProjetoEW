@@ -10,6 +10,8 @@ import UCPage from "./pages/UCPage/UCPage";
 import Unauthorized from "./pages/Unauthorized";
 import EditarUCPage from "./pages/UCPage/EditarUCPage";
 import ProfilePage from "./pages/ProfilePage";
+import AdminPage from "./pages/AdminPage";
+import AdminCriarPage from "./pages/AdminCriarPage";
 
 function App() {
   return (
@@ -20,12 +22,20 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/uc/:sigla" element={<UCPage />} />
           <Route
-            element={<ProtectedRoute allowedRoles={["admin", "teacher"]}/>}
+            element={<ProtectedRoute allowedRoles={["admin", "teacher"]} />}
           >
             <Route path="/uc/:sigla/editar" element={<EditarUCPage />} />
             <Route path="/uc/criar" element={<EditarUCPage isNew />} />
           </Route>
           <Route path="/perfil" element={<ProfilePage />} />
+          <Route path="/perfil/editar" element={<AdminCriarPage />} />
+
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/criar" element={<AdminCriarPage isNew />} />
+            <Route path="/admin/editar/:email" element={<AdminCriarPage />} />
+          </Route>
+
           <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

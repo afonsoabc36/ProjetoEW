@@ -81,7 +81,7 @@ const EditarUCPage = ({ isNew = false }) => {
   return (
     <div className="min-w-full md:p-4">
       <h1 className="text-2xl font-bold mb-4">
-        {isNew ? 'Create UC' : 'Edit UC'}
+        {isNew ? "Criar UC" : "Alterar UC"}
       </h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -343,9 +343,7 @@ const EditarUCPage = ({ isNew = false }) => {
           </div>
         </div>
         <div className="flex justify-end">
-          <Button type="submit">
-            {isNew ? 'Create UC' : 'Save Changes'}
-          </Button>
+          <Button type="submit">{isNew ? "Criar" : "Guardar"}</Button>
         </div>
       </form>
     </div>
