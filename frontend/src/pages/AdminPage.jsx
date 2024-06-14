@@ -1,11 +1,28 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import userService from "../services/userService";
-import Button from "../components/common/Button";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Input from "../components/common/Input";
+import Button from "../components/common/Button";
+import userService from "../services/userService";
+import { prettierRole } from "../services/prettierService";
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchUser, setSearchUser] = useState("");
+
+  useEffect(() => {
+    setFilteredUsers(
+      users.filter(
+        (user) => {
+          const name = user.name ? user.name.toLowerCase() : ""; // TODO: Nome pode estar vazio ?
+          return (
+            user.email.includes(searchUser.toLowerCase()) ||
+            name.includes(searchUser.toLowerCase())
+          );
+        })
+    );
+  }, [searchUser, users])
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -21,6 +38,10 @@ const AdminPage = () => {
     };
     fetchUsers();
   }, []);
+
+  const onChangeSearch = (e) => {
+    setSearchUser(e.target.value);
+  };
 
   const handleDeleteUser = (email) => async () => {
     try {
@@ -46,6 +67,15 @@ const AdminPage = () => {
         </Link>
       </div>
 
+      <Input
+        type="search"
+        placeholder="Pesquisar Utilizador"
+        className="w-full mt-4"
+        id="searchUser"
+        value={searchUser}
+        onChange={onChangeSearch}
+      />
+
       <div className="relative overflow-x-auto shadow-md">
         <table className="w-full text-sm text-left text-gray-400">
           <thead className="text-xs uppercase bg-gray-600 text-white">
@@ -60,11 +90,11 @@ const AdminPage = () => {
             </tr>
           </thead>
           <tbody className="text-white">
-            {users.map((user) => (
+            {filteredUsers?.map((user) => (
               <tr key={user._id} className="bg-gray-800">
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>
-                <td className="p-2">{user.role}</td>
+                <td className="p-2">{prettierRole(user.role)}</td>
                 <td className="p-2">{user.affiliation}</td>
                 <td className="p-2">{user.course}</td>
                 <td className="p-2">{user.department}</td>

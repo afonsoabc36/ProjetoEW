@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import userService from "../services/userService";
+import React, { useEffect } from "react";
 import Input from "../components/common/Input";
-import Button from "../components/common/Button";
 import { useAuth } from "../hooks/AuthProvider";
+import Select from "../components/common/Select";
+import Button from "../components/common/Button";
+import userService from "../services/userService";
 import ImageInput from "../components/common/ImageInput";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AdminCriarPage = ({ isNew = false }) => {
   const { email } = useParams();
@@ -18,6 +19,13 @@ const AdminCriarPage = ({ isNew = false }) => {
     department: "",
   });
   const { user: meUser } = useAuth();
+  const navigate = useNavigate();
+
+  const roleOptions = [
+    { value: "student", display: "Estudante" },
+    { value: "teacher", display: "Docente" },
+    { value: "admin", display: "Administrador" },
+  ];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -45,6 +53,10 @@ const AdminCriarPage = ({ isNew = false }) => {
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+
+  const handleRoleChange = (e) => {
+    setUser({ ...user, role: e.target.value });
+  }
 
   const handleImageChange = (e) => {
     setUser({ ...user, avatar: e.target.files[0] });
@@ -80,11 +92,20 @@ const AdminCriarPage = ({ isNew = false }) => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  }
+
   return (
     <div className="min-w-full p-4">
-      <h1 className="text-white font-bold text-3xl mb-4">
-        {isNew ? "Criar Utilizador" : "Editar Utilizador"}
-      </h1>
+      <div className="flex justify-between">
+        <h1 className="text-white font-bold text-3xl mb-4">
+          {isNew ? "Criar Utilizador" : "Editar Utilizador"}
+        </h1>
+        <Button variant="primary" className="mb-4" onClick={handleGoBack}>
+          Voltar
+        </Button>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col mb-4">
           <label className="text-white text-sm mb-2" htmlFor="name">
@@ -116,21 +137,14 @@ const AdminCriarPage = ({ isNew = false }) => {
           <label className="text-white text-sm mb-2" htmlFor="role">
             Role
           </label>
-          <Input
+          <Select
             id="role"
-            name="role"
+            options={roleOptions}
             value={user.role}
-            onChange={handleChange}
-            options={[
-              { value: "admin", label: "Administrador" },
-              { value: "student", label: "Estudante" },
-              { value: "teacher", label: "Docente" },
-            ]}
+            onChange={handleRoleChange}
+            placeholder="Escolha um role"
             required
           />
-          <p className="text-gray-400 mb-4 text-xs mt-1">
-            Role pode ser "admin", "teacher" ou "student".
-          </p>
         </div>
         <div className="flex flex-col mb-4">
           <label className="text-white text-sm mb-2" htmlFor="affiliation">

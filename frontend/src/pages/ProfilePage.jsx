@@ -1,8 +1,9 @@
 import React from "react";
-import { useAuth } from "../hooks/AuthProvider";
-import Button from "../components/common/Button";
 import { Link } from "react-router-dom";
 import Image from "../components/common/Image";
+import { useAuth } from "../hooks/AuthProvider";
+import Button from "../components/common/Button";
+import { prettierRole } from "../services/prettierService";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -36,7 +37,7 @@ const ProfilePage = () => {
           </div>
           <div className="py-4">
             <label className="text-xl font-bold">Role:</label>
-            <p>{user?.role || "N/A"}</p>
+            <p>{prettierRole(user?.role) || "N/A"}</p>
           </div>
           <div className="py-4">
             <label className="text-xl font-bold">Afiliação:</label>

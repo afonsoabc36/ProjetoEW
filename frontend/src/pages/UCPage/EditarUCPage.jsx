@@ -3,7 +3,7 @@ import Input from "../../components/common/Input";
 import { useAuth } from "../../hooks/AuthProvider";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/common/Button";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 const EditarUCPage = ({ isNew = false }) => {
   const { sigla } = useParams();
@@ -78,11 +78,22 @@ const EditarUCPage = ({ isNew = false }) => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  }
+
   return (
     <div className="min-w-full md:p-4">
+      <div className="flex justify-between">
       <h1 className="text-2xl font-bold mb-4">
         {isNew ? "Criar UC" : "Alterar UC"}
       </h1>
+      <Link to={`/uc/${sigla}`}>
+        <Button variant="primary" className="mb-4" onClick={handleGoBack}>
+            Voltar
+        </Button>
+      </Link>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-white">Sigla:</label>

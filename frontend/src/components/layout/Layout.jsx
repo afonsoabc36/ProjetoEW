@@ -5,6 +5,9 @@ import { useAuth } from "../../hooks/AuthProvider";
 
 const Layout = () => {
   const auth = useAuth();
+  const { user } = auth;
+
+  const isAdmin = user.role == "admin";
 
   return (
     <div className="min-h-screen min-w-full bg-dark text-white">
@@ -14,11 +17,13 @@ const Layout = () => {
             <h1 className="text-2xl font-bold text-left">Gestor de UC's</h1>
           </Link>
           <div>
-            <Link to="/admin" className="mr-2">
-              <Button variant="nobg" size="sm">
-                Admin
-              </Button>
-            </Link>
+            { (isAdmin) && (
+              <Link to="/admin" className="mr-2">
+                <Button variant="nobg" size="sm">
+                  Admin
+                </Button>
+              </Link>
+            )}
             <Link to="/perfil" className="mr-2">
               <Button variant="nobg" size="sm">
                 Perfil

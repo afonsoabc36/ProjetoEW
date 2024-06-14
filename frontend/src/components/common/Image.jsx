@@ -3,7 +3,13 @@ import classNames from "classnames";
 
 const Image = ({ className, url, fullUrl, alt }) => {
   const combinedClasses = classNames("object-cover", className);
-  const imgUrl = fullUrl || `http://localhost:4000/${url}`;
+  
+  let imgUrl = "";
+  if (url != "https://www.gravatar.com/avatar/?d=mp"){ // Default picture
+    imgUrl = fullUrl || `http://localhost:4000/${url}`;
+  } else {
+    imgUrl = url
+  }
   console.log(imgUrl);
 
   return (
