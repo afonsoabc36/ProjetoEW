@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require('path');
 const UC = require("../Models/UCModel");
 
 const getUCs = async (req, res) => {
@@ -114,28 +116,35 @@ const insertDoc = async (req, res) => {
 
 const deleteDoc = async (req, res) => {
   try {
-    const sigla = req.params.sigla;
-    const folderName = req.params.folderName;
-    const docName = req.params.docName;
-
+    const { sigla, folderName, docName } = req.params;
+    
     const uc = await UC.findOne({ sigla }).exec();
 
     if (!uc) {
       return res.status(404).json({ message: "UC not found" });
     }
-
     const folder = uc.conteudo.find((folder) => folder.nome === folderName);
-
+    
     if (!folder) {
       return res.status(404).json({ message: "Folder not found" });
     }
-
+    
     const doc = folder.docs.find((doc) => doc.nome === docName);
-
+    
     if (!doc) {
       return res.status(404).json({ message: "Doc not found" });
     }
 
+    const filePath = path.join(__dirname, `../uploads/${sigla}/${folderName}/docs/${docName}`);
+    try {
+      await fs.promises.unlink(filePath);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return res.status(404).json({ message: 'File not found' });
+      }
+      throw error;
+    }
+    
     const docIndex = folder.docs.indexOf(doc);
     folder.docs.splice(docIndex, 1);
 

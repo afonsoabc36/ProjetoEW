@@ -64,8 +64,17 @@ const DocsPage = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4">Conteúdo</h1>
-      <p className="text-xl mb-6">Sigla: {sigla}</p>
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-3xl font-bold mb-4">Conteúdo</h1>
+          <p className="text-xl mb-6">Sigla: {sigla}</p>
+        </div>
+        <Link to={`/uc/${sigla}`}>
+          <Button variant="primary" className="mb-4">
+            Voltar
+          </Button>
+        </Link>
+      </div>
 
       {uc && (
         <div className="mb-8">
