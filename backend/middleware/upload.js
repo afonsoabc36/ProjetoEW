@@ -44,17 +44,20 @@ const createAvatarMulterInstance = (folderName) => {
   });
 };
 
-const createCourseDocMulterInstance = (courseSilga, folderName) => {
+const createCourseDocMulterInstance = () => {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      const uploadPath = `uploads/${folderName}/${courseSilga}`;
+      const { sigla, folderName } = req.params;
+      console.log('foldername ' + folderName)
+
+      const uploadPath = `uploads/${sigla}/${folderName}/docs`;
       createUploadsDirectory(uploadPath);
       cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
       cb(
         null,
-        `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+        file.originalname
       );
     },
   });

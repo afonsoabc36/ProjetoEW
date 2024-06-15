@@ -1,16 +1,20 @@
-var createError = require("http-errors");
-var express = require("express");
 var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-const connectDB = require("./config/connectDB");
-require("dotenv").config();
 var cors = require("cors");
+require("dotenv").config();
+var logger = require("morgan");
+var express = require("express");
+var createError = require("http-errors");
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
+const connectDB = require("./config/connectDB");
 
 var app = express();
 
 app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 
 connectDB();
 
@@ -30,10 +34,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
+app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
+  setHeaders: (res, path, stat) => {
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  }
+}));
+
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/UCs", UCsRouter);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+//app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.all("*", (req, res) => {
   res.status(404);

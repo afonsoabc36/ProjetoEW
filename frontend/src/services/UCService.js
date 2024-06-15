@@ -45,8 +45,8 @@ const createUC = async (newUC) => {
   return response.data;
 };
 
-const insertDoc = async (sigla, doc) => {
-  const response = await api.post(`${API_URL}/${sigla}/conteudo`, doc);
+const insertDoc = async (sigla, folderName, doc) => {
+  const response = await api.post(`${API_URL}/${sigla}/conteudo/${folderName}`, doc);
   return response.data;
 };
 

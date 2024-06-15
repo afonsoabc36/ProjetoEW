@@ -41,7 +41,7 @@ const EditarUCPage = ({ isNew = false }) => {
   useEffect(() => {
     if (isNew && user.role === "teacher") {
       const newDocenteData = {
-        name: user.name,
+        nome: user.name,
         email: user.email,
         filiacao: user.affiliation,
       };

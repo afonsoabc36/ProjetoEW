@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import UCService from "../../services/UCService";
-import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import React, { useEffect, useState } from "react";
+import Button from "../../components/common/Button";
 
 const DocsPage = () => {
   const { sigla } = useParams();
@@ -42,11 +42,11 @@ const DocsPage = () => {
     formData.append("folderName", folderName);
 
     try {
-      await UCService.insertDoc(sigla, formData);
+      await UCService.insertDoc(sigla, folderName, formData);
       const data = await UCService.getUC(sigla);
-      setUC(data); // Refresh the UC data
-      setSelectedFile(null); // Clear the selected file
-      setFolderName(""); // Clear the folder name input
+      setUC(data);
+      setSelectedFile(null);
+      setFolderName("");
     } catch (error) {
       console.error("Error uploading document:", error);
     }
@@ -56,7 +56,7 @@ const DocsPage = () => {
     try {
       await UCService.deleteDoc(sigla, folderName, docName);
       const data = await UCService.getUC(sigla);
-      setUC(data); // Refresh the UC data
+      setUC(data);
     } catch (error) {
       console.error("Error deleting document:", error);
     }
@@ -78,14 +78,13 @@ const DocsPage = () => {
                     key={doc.nome}
                     className="flex justify-between items-center p-2 border-b last:border-none"
                   >
-                    <a
-                      href={doc.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link to={`/uc/${sigla}/conteudo/${folder.nome}/${doc.nome}`}>
+                    <p
                       className="text-blue-500 hover:underline"
-                    >
+                      >
                       {doc.nome}
-                    </a>
+                    </p>
+                    </Link>
                     <button
                       className="text-red-500 hover:text-red-700"
                       onClick={() => handleDelete(folder.nome, doc.nome)}
@@ -103,6 +102,7 @@ const DocsPage = () => {
       <div className="bg-gray-700 p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-4">Upload Document</h2>
         <Input
+          id="folderName"
           type="text"
           placeholder="Folder Name"
           value={folderName}
@@ -110,6 +110,7 @@ const DocsPage = () => {
           className="mb-4 p-2 border rounded-lg w-full"
         />
         <Input
+          id="selectedFile"
           type="file"
           onChange={handleFileChange}
           className="mb-4 p-2 border rounded-lg w-full"

@@ -16,7 +16,7 @@ const verifyRole = require("../middleware/verifyRole");
 
 const { createCourseDocMulterInstance } = require("../middleware/upload");
 
-const uploadDocs = createCourseDocMulterInstance("docs");
+const uploadDocs = createCourseDocMulterInstance();
 
 router.use(verifyJWT);
 
@@ -26,7 +26,7 @@ router.get("/:sigla", getUCBySigla);
 router.get("/docentes/:sigla", getDocentesBySigla);
 router.post("/", insertUC);
 
-router.post("/:sigla/conteudo", uploadDocs.single("doc"), insertDoc);
+router.post("/:sigla/conteudo/:folderName", uploadDocs.single("doc"), insertDoc);
 router.delete("/:sigla/conteudo/:folderName/:docName", deleteDoc);
 
 router.put("/:sigla", updateUC);

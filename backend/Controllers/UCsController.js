@@ -81,24 +81,24 @@ const getDocentesBySigla = async (req, res) => {
 const insertDoc = async (req, res) => {
   try {
     const sigla = req.params.sigla;
+    console.log(sigla);
     const folderName = req.body.folderName;
+    console.log(folderName);
 
     const uc = await UC.findOne({ sigla }).exec();
     if (!uc) {
       return res.status(404).json({ message: "UC not found" });
     }
 
-    // Find the folder index in the uc.conteudo array
     let folderIndex = uc.conteudo.findIndex(
       (folder) => folder.nome === folderName
     );
+    console.log(folderIndex)
     if (folderIndex === -1) {
-      // If folder doesn't exist, create a new one and push it to the array
       uc.conteudo.push({ nome: folderName, docs: [] });
-      folderIndex = uc.conteudo.length - 1; // New folder index is the last element
+      folderIndex = uc.conteudo.length - 1;
     }
 
-    // Push the new document into the folder's docs array
     uc.conteudo[folderIndex].docs.push({
       nome: req.file.originalname,
       path: req.file.path,

@@ -13,6 +13,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import AdminCriarPage from "./pages/AdminCriarPage";
 import DocsPage from "./pages/UCPage/DocsPage";
+import DocViewerPage from "./pages/UCPage/DocViewerPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
 
           <Route path="/uc/:sigla/conteudo" element={<DocsPage />} />
+          <Route path="/uc/:sigla/conteudo/:folderName/:fileName" element={<DocViewerPage />} />
 
           <Route path="/uc/:sigla" element={<UCPage />} />
           <Route
