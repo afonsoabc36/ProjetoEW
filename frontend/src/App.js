@@ -12,6 +12,7 @@ import EditarUCPage from "./pages/UCPage/EditarUCPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import AdminCriarPage from "./pages/AdminCriarPage";
+import DocsPage from "./pages/UCPage/DocsPage";
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<HomePage />} />
+
+          <Route path="/uc/:sigla/conteudo" element={<DocsPage />} />
+
           <Route path="/uc/:sigla" element={<UCPage />} />
           <Route
             element={<ProtectedRoute allowedRoles={["admin", "teacher"]} />}

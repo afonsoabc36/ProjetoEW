@@ -11,7 +11,7 @@ const HomePage = () => {
   const { user } = useAuth();
   const [ucs, setUcs] = useState([]);
   const [searchUC, setSearchUC] = useState("");
-  const [favoriteUCs, setFavoriteUCs] = useState([])
+  const [favoriteUCs, setFavoriteUCs] = useState([]);
   const [filteredUCs, setFilteredUCs] = useState([]);
 
   useEffect(() => {
@@ -21,10 +21,11 @@ const HomePage = () => {
         setUcs(data);
 
         if (user) {
-          const favoritesData = await userService.getUserFavoriteUCs(user.email);
+          const favoritesData = await userService.getUserFavoriteUCs(
+            user.email
+          );
           setFavoriteUCs(favoritesData);
         }
-
       } catch (error) {
         console.error("Failed to fetch data", error);
         alert("Failed to fetch data");
@@ -34,27 +35,29 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = ucs.filter((uc) =>
-      uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
-      uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
+    const filtered = ucs.filter(
+      (uc) =>
+        uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
+        uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
     );
 
     const favoriteUCSiglas = new Set(favoriteUCs);
 
     const favoriteUCsFiltered = favoriteUCs
-    .map((sigla) => ucs.find((uc) => uc.sigla === sigla))
-    .filter((uc) =>
-      uc &&
-      (uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
-        uc.sigla.toLowerCase().includes(searchUC.toLowerCase()))
-    );
+      .map((sigla) => ucs.find((uc) => uc.sigla === sigla))
+      .filter(
+        (uc) =>
+          uc &&
+          (uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
+            uc.sigla.toLowerCase().includes(searchUC.toLowerCase()))
+      );
 
     const otherUCsFiltered = filtered.filter(
       (uc) => !favoriteUCSiglas.has(uc.sigla)
     );
 
     const mergedUCs = [...favoriteUCsFiltered, ...otherUCsFiltered];
-    
+
     setFilteredUCs(mergedUCs);
   }, [searchUC, ucs, favoriteUCs]);
 
@@ -74,15 +77,16 @@ const HomePage = () => {
 
       setFavoriteUCs(updatedFavorites);
 
-      const response = await userService.updateUserFavorites(user.email, Array.from(updatedFavorites));
+      const response = await userService.updateUserFavorites(
+        user.email,
+        Array.from(updatedFavorites)
+      );
       console.log(response);
-
     } catch (error) {
       console.error("Failed to update favorites", error);
       alert("Failed to update favorites");
     }
   };
-
 
   return (
     <div className="p-4">
@@ -99,7 +103,7 @@ const HomePage = () => {
       {filteredUCs?.map((uc) => (
         <div
           key={uc._id}
-          className="block bg-gray-600 m-4 border border-gray-500 rounded-lg shadow-xl transform transition duration-500 hover:scale-105 cursor-pointer  overflow-hidden"
+          className="block bg-gray-600 m-4 border border-gray-500 rounded-lg shadow-xl transform transition duration-500 hover:scale-[101%] cursor-pointer  overflow-hidden"
           onClick={() => window.location.replace(`/uc/${uc.sigla}`)}
         >
           <div className="text-center">
@@ -114,13 +118,13 @@ const HomePage = () => {
               >
                 {favoriteUCs.includes(uc.sigla) ? (
                   <img
-                    src={process.env.PUBLIC_URL + '/filledStar.png'}
+                    src={process.env.PUBLIC_URL + "/filledStar.png"}
                     alt="Filled Star"
                     className="h-full w-full"
                   />
                 ) : (
                   <img
-                    src={process.env.PUBLIC_URL + '/unfilledStar.png'}
+                    src={process.env.PUBLIC_URL + "/unfilledStar.png"}
                     alt="Unfilled Star"
                     className="h-full w-full"
                   />
@@ -134,7 +138,7 @@ const HomePage = () => {
           </div>
         </div>
       ))}
-      {user.role !== 'student' && (
+      {user.role !== "student" && (
         <div className="p-4">
           <Link to="/uc/criar">
             <Button className="w-full">Adicionar UC</Button>

@@ -2,6 +2,25 @@ const mongoose = require("mongoose");
 const DocenteModel = require("./DocenteModel");
 const Schema = mongoose.Schema;
 
+const DocSchema = new Schema({
+  nome: {
+    type: String,
+    required: true,
+  },
+  path: {
+    type: String,
+    required: true,
+  },
+});
+
+const PastaSchema = new Schema({
+  nome: {
+    type: String,
+    required: true,
+  },
+  docs: [DocSchema],
+});
+
 const UCSchema = new Schema({
   sigla: {
     type: String,
@@ -9,15 +28,11 @@ const UCSchema = new Schema({
     trim: true,
     unique: true,
     uppercase: true,
-    minlength: 2,
-    maxlength: 10,
   },
   titulo: {
     type: String,
     required: true,
     trim: true,
-    minlength: 2,
-    maxlength: 50,
   },
   docentes: [DocenteModel.schema],
   horario: {
@@ -31,7 +46,6 @@ const UCSchema = new Schema({
   avaliacao: [
     {
       type: [String],
-      minlength: 2,
     },
   ],
   datas: [
@@ -51,7 +65,7 @@ const UCSchema = new Schema({
     {
       tipo: {
         type: String,
-        enum: ["T", "P"],
+        enum: ["T", "P", "TP"],
       },
       data: {
         type: String,
@@ -61,6 +75,7 @@ const UCSchema = new Schema({
       },
     },
   ],
+  conteudo: [PastaSchema],
 });
 
 module.exports = mongoose.model("UC", UCSchema);

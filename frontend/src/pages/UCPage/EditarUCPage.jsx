@@ -38,6 +38,21 @@ const EditarUCPage = ({ isNew = false }) => {
     }
   }, [sigla]);
 
+  useEffect(() => {
+    if (isNew && user.role === "teacher") {
+      const newDocenteData = {
+        name: user.name,
+        email: user.email,
+        filiacao: user.affiliation,
+      };
+
+      setUC((prevUC) => ({
+        ...prevUC,
+        docentes: [...prevUC.docentes, newDocenteData],
+      }));
+    }
+  }, [isNew, user]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUC({ ...uc, [name]: value });
@@ -96,14 +111,23 @@ const EditarUCPage = ({ isNew = false }) => {
         if (!isAlreadyDocente) {
           setUC({
             ...uc,
-            docentes: [...uc.docentes, { email: newDocente, nome: userResponse.name, filiacao: userResponse.affiliation }],
+            docentes: [
+              ...uc.docentes,
+              {
+                email: newDocente,
+                nome: userResponse.name,
+                filiacao: userResponse.affiliation,
+              },
+            ],
           });
           setNewDocente("");
         } else {
           alert("Este docente já está associado a esta UC.");
         }
       } else {
-        alert("O utilizador com este email não é um docente válido ou já está associado a esta UC.");
+        alert(
+          "O utilizador com este email não é um docente válido ou já está associado a esta UC."
+        );
       }
     } catch (error) {
       console.error("Erro ao adicionar docente", error);
@@ -114,14 +138,14 @@ const EditarUCPage = ({ isNew = false }) => {
   return (
     <div className="min-w-full md:p-4">
       <div className="flex justify-between">
-      <h1 className="text-2xl font-bold mb-4">
-        {isNew ? "Criar UC" : "Alterar UC"}
-      </h1>
-      <Link to={isNew ? '/' : `/uc/${sigla}`}>
-        <Button variant="primary" className="mb-4">
+        <h1 className="text-2xl font-bold mb-4">
+          {isNew ? "Criar UC" : "Alterar UC"}
+        </h1>
+        <Link to={isNew ? "/" : `/uc/${sigla}`}>
+          <Button variant="primary" className="mb-4">
             Voltar
-        </Button>
-      </Link>
+          </Button>
+        </Link>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -193,10 +217,7 @@ const EditarUCPage = ({ isNew = false }) => {
               onChange={(e) => setNewDocente(e.target.value)}
             />
             <div>
-              <Button
-                className="mt-2 ml-2"
-                onClick={handleAddDocente}
-              >
+              <Button className="mt-2 ml-2" onClick={handleAddDocente}>
                 Adicionar Docente
               </Button>
             </div>

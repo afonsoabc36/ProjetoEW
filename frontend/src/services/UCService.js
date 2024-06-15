@@ -25,10 +25,10 @@ const getDocentes = async (sigla) => {
     const response = await api.get(`${API_URL}/docentes/${sigla}`);
     const data = await response.data;
     return data;
-    } catch (error) {
+  } catch (error) {
     return Promise.reject(error.response.data);
   }
-}
+};
 
 const updateUC = async (sigla, updatedUC) => {
   const response = await api.put(`${API_URL}/${sigla}`, updatedUC);
@@ -45,6 +45,27 @@ const createUC = async (newUC) => {
   return response.data;
 };
 
-const UCService = { getUCs, getUC, getDocentes, updateUC, deleteUC, createUC };
+const insertDoc = async (sigla, doc) => {
+  const response = await api.post(`${API_URL}/${sigla}/conteudo`, doc);
+  return response.data;
+};
+
+const deleteDoc = async (sigla, folderName, docName) => {
+  const response = await api.delete(
+    `${API_URL}/${sigla}/conteudo/${folderName}/${docName}`
+  );
+  return response.data;
+};
+
+const UCService = {
+  getUCs,
+  getUC,
+  getDocentes,
+  updateUC,
+  deleteUC,
+  createUC,
+  insertDoc,
+  deleteDoc,
+};
 
 export default UCService;

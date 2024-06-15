@@ -12,13 +12,13 @@ const getUCs = async (req, res) => {
 const getUCBySigla = async (req, res) => {
   try {
     const sigla = req.params.sigla;
-    const filtro = { sigla : sigla }
+    const filtro = { sigla: sigla };
     const uc = await UC.findOne(filtro).exec();
     if (uc) {
       res.json(uc);
     } else {
-      res.status(404).json({message: "UC not found"})
-    } 
+      res.status(404).json({ message: "UC not found" });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -37,7 +37,9 @@ const insertUC = async (req, res) => {
 const updateUC = async (req, res) => {
   try {
     const sigla = req.params.sigla;
-    const updatedUC = await UC.findOneAndUpdate({ sigla: sigla }, req.body, { new: true }).exec();
+    const updatedUC = await UC.findOneAndUpdate({ sigla: sigla }, req.body, {
+      new: true,
+    }).exec();
     if (updatedUC) {
       res.json(updatedUC);
     } else {
@@ -76,12 +78,81 @@ const getDocentesBySigla = async (req, res) => {
   }
 };
 
+const insertDoc = async (req, res) => {
+  try {
+    const sigla = req.params.sigla;
+    const folderName = req.body.folderName;
+
+    const uc = await UC.findOne({ sigla }).exec();
+    if (!uc) {
+      return res.status(404).json({ message: "UC not found" });
+    }
+
+    // Find the folder index in the uc.conteudo array
+    let folderIndex = uc.conteudo.findIndex(
+      (folder) => folder.nome === folderName
+    );
+    if (folderIndex === -1) {
+      // If folder doesn't exist, create a new one and push it to the array
+      uc.conteudo.push({ nome: folderName, docs: [] });
+      folderIndex = uc.conteudo.length - 1; // New folder index is the last element
+    }
+
+    // Push the new document into the folder's docs array
+    uc.conteudo[folderIndex].docs.push({
+      nome: req.file.originalname,
+      path: req.file.path,
+    });
+
+    await uc.save();
+    res.status(201).json(uc);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+    console.log(error);
+  }
+};
+
+const deleteDoc = async (req, res) => {
+  try {
+    const sigla = req.params.sigla;
+    const folderName = req.params.folderName;
+    const docName = req.params.docName;
+
+    const uc = await UC.findOne({ sigla }).exec();
+
+    if (!uc) {
+      return res.status(404).json({ message: "UC not found" });
+    }
+
+    const folder = uc.conteudo.find((folder) => folder.nome === folderName);
+
+    if (!folder) {
+      return res.status(404).json({ message: "Folder not found" });
+    }
+
+    const doc = folder.docs.find((doc) => doc.nome === docName);
+
+    if (!doc) {
+      return res.status(404).json({ message: "Doc not found" });
+    }
+
+    const docIndex = folder.docs.indexOf(doc);
+    folder.docs.splice(docIndex, 1);
+
+    await uc.save();
+    res.status(200).json(uc);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 module.exports = {
   getUCs,
   getUCBySigla,
   getDocentesBySigla,
-  insertUC, 
-  updateUC, 
-  deleteUC
+  insertUC,
+  updateUC,
+  deleteUC,
+  insertDoc,
+  deleteDoc,
 };

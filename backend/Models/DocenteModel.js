@@ -8,15 +8,12 @@ const DocenteSchema = new Schema({
   },
   foto: {
     type: String,
-    required: true,
   },
   categoria: {
     type: String,
-    required: true,
   },
   filiacao: {
     type: String,
-    required: true,
   },
   email: {
     type: String,

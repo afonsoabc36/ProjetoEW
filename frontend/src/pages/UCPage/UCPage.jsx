@@ -13,13 +13,15 @@ const UCPage = () => {
 
   const isAdmin = user?.role === "admin";
   const isTeacher = user?.role === "teacher";
-  const isDocente = uc?.docentes?.some(docente => docente.email === user.email);
+  const isDocente = uc?.docentes?.some(
+    (docente) => docente.email === user.email
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await UCService.getUC(sigla);
-        data.docentes.forEach(element => {
+        data.docentes.forEach((element) => {
           console.log(element);
         });
         setUC(data);
@@ -50,7 +52,7 @@ const UCPage = () => {
         </div>
         <div className="pb-5 flex-row justify-end md:mt-10">
           {(isAdmin || (isTeacher && isDocente)) && (
-            <div className="mt-4 md:mt-0 md:ml-10">
+            <div className="flex  mt-4 md:mt-0 md:ml-10">
               <Link to={`/uc/${sigla}/editar`}>
                 <Button variant="primary">Editar UC</Button>
               </Link>
@@ -61,6 +63,9 @@ const UCPage = () => {
               >
                 Apagar UC
               </Button>
+              <Link to={`/uc/${sigla}/conteudo`}>
+                <Button variant="primary">Ver Conteúdo</Button>
+              </Link>
             </div>
           )}
         </div>
@@ -136,7 +141,9 @@ const UCPage = () => {
         </div>
 
         <div className="p-2">
-          <h3 className="font-bold text-2xl text-center text-primary mt-2">Sumários</h3>
+          <h3 className="font-bold text-2xl text-center text-primary mt-2">
+            Sumários
+          </h3>
 
           {uc?.aulas?.map((aula) => {
             return (

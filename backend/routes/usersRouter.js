@@ -12,9 +12,9 @@ const {
 } = require("../Controllers/usersController");
 
 const verifyJWT = require("../middleware/veriftJWT");
-const { createMulterInstance } = require("../middleware/upload");
+const { createAvatarMulterInstance } = require("../middleware/upload");
 
-const uploadAvatar = createMulterInstance("avatars");
+const uploadAvatar = createAvatarMulterInstance("avatars");
 
 router.use(verifyJWT);
 
