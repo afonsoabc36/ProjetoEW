@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/AuthProvider";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/common/Button";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import userService from "../../services/userService";
 
 const EditarUCPage = ({ isNew = false }) => {
   const { sigla } = useParams();
@@ -82,6 +83,39 @@ const EditarUCPage = ({ isNew = false }) => {
     navigate(-1);
   }
 
+  const handleAddDocente = async () => {
+    try {
+      if (!newDocente.trim()) {
+        alert("Por favor, insira um email de docente válido.");
+        return;
+      }
+
+      const userResponse = await userService.getUserByEmail(newDocente);
+      console.log(userResponse)
+
+      if (userResponse && userResponse.role === "teacher") {
+        const isAlreadyDocente = uc.docentes.some(
+          (docente) => docente.email === newDocente
+        );
+
+        if (!isAlreadyDocente) {
+          setUC({
+            ...uc,
+            docentes: [...uc.docentes, { email: newDocente, nome: userResponse.name, filiacao: userResponse.affiliation }],
+          });
+          setNewDocente("");
+        } else {
+          alert("Este docente já está associado a esta UC.");
+        }
+      } else {
+        alert("O utilizador com este email não é um docente válido ou já está associado a esta UC.");
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar docente", error);
+      alert("Erro ao adicionar docente. Por favor, tente novamente.");
+    }
+  };
+
   return (
     <div className="min-w-full md:p-4">
       <div className="flex justify-between">
@@ -130,6 +164,14 @@ const EditarUCPage = ({ isNew = false }) => {
                 disabled
                 className="w-full p-2 border bg-gray-500 border-gray-300 rounded mt-2"
               />
+              <Input
+                id={`docenteEmail-${index}`}
+                type="text"
+                name={`docenteEmail-${index}`}
+                value={docente.email}
+                disabled
+                className="w-full p-2 border bg-gray-500 border-gray-300 rounded mt-2"
+              />
               <div className="ml-2">
                 <Button
                   className="mt-2"
@@ -147,22 +189,18 @@ const EditarUCPage = ({ isNew = false }) => {
           ))}
           <div className="flex">
             <Input
-              id="new-docente"
+              id="newDocente"
               type="text"
-              name="new-docente"
-              placeholder="Novo docente"
-              className="w-full p-2 rounded mt-2"
+              name="newDocente"
+              value={newDocente}
+              placeholder="Email novo docente"
+              className="w-full p-2 border bg-gray-500 border-gray-300 rounded mt-2"
               onChange={(e) => setNewDocente(e.target.value)}
             />
             <div>
               <Button
                 className="mt-2 ml-2"
-                onClick={() =>
-                  setUC({
-                    ...uc,
-                    docentes: [...uc.docentes, { nome: newDocente, email: "" }],
-                  })
-                }
+                onClick={handleAddDocente}
               >
                 Adicionar Docente
               </Button>

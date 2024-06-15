@@ -19,6 +19,9 @@ const UCPage = () => {
     const fetchData = async () => {
       try {
         const data = await UCService.getUC(sigla);
+        data.docentes.forEach(element => {
+          console.log(element);
+        });
         setUC(data);
       } catch (error) {
         console.error("Failed to fetch data", error);
