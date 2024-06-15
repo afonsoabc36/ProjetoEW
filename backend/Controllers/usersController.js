@@ -1,5 +1,5 @@
-const User = require("../Models/UserModel");
 const bcrypt = require("bcrypt");
+const User = require("../Models/UserModel");
 
 // Get current user details
 const getUserDetails = async (req, res, next) => {
@@ -41,6 +41,20 @@ const getUserByEmail = async (req, res) => {
   }
 };
 
+const getUserFavoriteUCs = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const user = await User.findOne({ email: email }).exec();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user.favorites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 const insertUser = async (req, res) => {
   try {
     const {
@@ -52,6 +66,7 @@ const insertUser = async (req, res) => {
       course,
       avatar,
       role,
+      favorites,
     } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -65,6 +80,7 @@ const insertUser = async (req, res) => {
       course,
       avatar,
       role,
+      favorites,
     });
 
     const savedUser = await newUser.save();
@@ -79,7 +95,7 @@ const insertUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const email = req.params.email;
-    const { password, name, affiliation, department, course, avatar, role } =
+    const { password, name, affiliation, department, course, avatar, role, favorites } =
       req.body;
 
     const updates = {
@@ -90,6 +106,7 @@ const updateUser = async (req, res) => {
       avatar,
       role,
       password,
+      favorites,
     };
 
     console.log(req.file);
@@ -114,6 +131,24 @@ const updateUser = async (req, res) => {
   }
 };
 
+const updateUserFavorites = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { favorites } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      { email: email },
+      { favorites: favorites },
+      { new: true }
+    );
+
+    res.status(200).json(user.favorites);
+  } catch (error) {
+    console.error("Failed to update favorites:", error);
+    res.status(500).json({ message: "Failed to update favorites" });
+  }
+}
+
 const deleteUser = async (req, res) => {
   try {
     const email = req.params.email;
@@ -135,4 +170,6 @@ module.exports = {
   deleteUser,
   getUserDetails,
   getUserByEmail,
+  getUserFavoriteUCs,
+  updateUserFavorites,
 };

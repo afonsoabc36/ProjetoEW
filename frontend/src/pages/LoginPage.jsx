@@ -8,6 +8,7 @@ const LoginPage = () => {
   const auth = useAuth();
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  console.log("login " + process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
   const onChange = (e) => {
     const { id, value } = e.target;
@@ -34,7 +35,7 @@ const LoginPage = () => {
   const handleGoogleSuccess = async (response) => {
     const tokenId = response.credential;
     try {
-      await auth.googleLoginAction(tokenId); // Implement googleLoginAction in your auth context
+      await auth.googleLoginAction(tokenId);
       if (auth.error) {
         alert(auth.error);
         return;
@@ -55,7 +56,7 @@ const LoginPage = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="bg-dark min-h-screen p-14 text-white">
         <h1 className="text-white font-bold text-3xl mb-4">Login</h1>
         <form onSubmit={handleSubmit}>

@@ -3,8 +3,8 @@ import Input from "../../components/common/Input";
 import { useAuth } from "../../hooks/AuthProvider";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/common/Button";
-import { useParams, useNavigate, Link } from "react-router-dom";
 import userService from "../../services/userService";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 const EditarUCPage = ({ isNew = false }) => {
   const { sigla } = useParams();
@@ -79,10 +79,6 @@ const EditarUCPage = ({ isNew = false }) => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1);
-  }
-
   const handleAddDocente = async () => {
     try {
       if (!newDocente.trim()) {
@@ -91,7 +87,6 @@ const EditarUCPage = ({ isNew = false }) => {
       }
 
       const userResponse = await userService.getUserByEmail(newDocente);
-      console.log(userResponse)
 
       if (userResponse && userResponse.role === "teacher") {
         const isAlreadyDocente = uc.docentes.some(
@@ -122,8 +117,8 @@ const EditarUCPage = ({ isNew = false }) => {
       <h1 className="text-2xl font-bold mb-4">
         {isNew ? "Criar UC" : "Alterar UC"}
       </h1>
-      <Link to={`/uc/${sigla}`}>
-        <Button variant="primary" className="mb-4" onClick={handleGoBack}>
+      <Link to={isNew ? '/' : `/uc/${sigla}`}>
+        <Button variant="primary" className="mb-4">
             Voltar
         </Button>
       </Link>

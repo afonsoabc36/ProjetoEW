@@ -6,7 +6,7 @@ import Select from "../components/common/Select";
 import Button from "../components/common/Button";
 import userService from "../services/userService";
 import ImageInput from "../components/common/ImageInput";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminCriarPage = ({ isNew = false }) => {
   const { email } = useParams();
@@ -92,19 +92,17 @@ const AdminCriarPage = ({ isNew = false }) => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1);
-  }
-
   return (
     <div className="min-w-full p-4">
       <div className="flex justify-between">
         <h1 className="text-white font-bold text-3xl mb-4">
           {isNew ? "Criar Utilizador" : "Editar Utilizador"}
         </h1>
-        <Button variant="primary" className="mb-4" onClick={handleGoBack}>
-          Voltar
-        </Button>
+        <Link to={!email ? "/perfil" : "/admin"}>
+          <Button variant="primary" className="mb-4">
+            Voltar
+          </Button>
+        </Link>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col mb-4">

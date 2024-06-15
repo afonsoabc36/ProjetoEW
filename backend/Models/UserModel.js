@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -37,6 +37,9 @@ const UserSchema = new mongoose.Schema(
     avatar: {
       type: String,
       default: "https://www.gravatar.com/avatar/?d=mp",
+    },
+    favorites: {
+      type: [String]
     },
     role: {
       type: String,

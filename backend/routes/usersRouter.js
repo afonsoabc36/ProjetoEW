@@ -7,7 +7,9 @@ const {
   deleteUser,
   getUserDetails,
   getUserByEmail,
-} = require("../controllers/usersController");
+  getUserFavoriteUCs,
+  updateUserFavorites,
+} = require("../Controllers/usersController");
 
 const verifyJWT = require("../middleware/veriftJWT");
 const { createMulterInstance } = require("../middleware/upload");
@@ -20,8 +22,10 @@ router.use(verifyJWT);
 router.get("/me", getUserDetails);
 router.get("/", getUsers);
 router.get("/:email", getUserByEmail);
+router.get("/:email/favorites", getUserFavoriteUCs);
 router.post("/", insertUser);
 router.put("/:email", uploadAvatar.single("avatar"), updateUser);
+router.put("/:email/favorites", updateUserFavorites);
 router.delete("/:email", deleteUser);
 
 module.exports = router;
