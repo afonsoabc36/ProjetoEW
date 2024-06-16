@@ -1,5 +1,5 @@
 const fs = require("fs");
-const path = require('path');
+const path = require("path");
 const UC = require("../Models/UCModel");
 
 const getUCs = async (req, res) => {
@@ -83,9 +83,7 @@ const getDocentesBySigla = async (req, res) => {
 const insertDoc = async (req, res) => {
   try {
     const sigla = req.params.sigla;
-    console.log(sigla);
     const folderName = req.body.folderName;
-    console.log(folderName);
 
     const uc = await UC.findOne({ sigla }).exec();
     if (!uc) {
@@ -95,7 +93,6 @@ const insertDoc = async (req, res) => {
     let folderIndex = uc.conteudo.findIndex(
       (folder) => folder.nome === folderName
     );
-    console.log(folderIndex)
     if (folderIndex === -1) {
       uc.conteudo.push({ nome: folderName, docs: [] });
       folderIndex = uc.conteudo.length - 1;
@@ -110,43 +107,87 @@ const insertDoc = async (req, res) => {
     res.status(201).json(uc);
   } catch (error) {
     res.status(400).json({ message: error.message });
-    console.log(error);
   }
 };
 
 const deleteDoc = async (req, res) => {
   try {
     const { sigla, folderName, docName } = req.params;
-    
+
     const uc = await UC.findOne({ sigla }).exec();
 
     if (!uc) {
       return res.status(404).json({ message: "UC not found" });
     }
     const folder = uc.conteudo.find((folder) => folder.nome === folderName);
-    
+
     if (!folder) {
       return res.status(404).json({ message: "Folder not found" });
     }
-    
+
     const doc = folder.docs.find((doc) => doc.nome === docName);
-    
+
     if (!doc) {
       return res.status(404).json({ message: "Doc not found" });
     }
 
-    const filePath = path.join(__dirname, `../uploads/${sigla}/${folderName}/docs/${docName}`);
+    const filePath = path.join(
+      __dirname,
+      `../uploads/${sigla}/${folderName}/docs/${docName}`
+    );
     try {
       await fs.promises.unlink(filePath);
     } catch (error) {
-      if (error.code === 'ENOENT') {
-        return res.status(404).json({ message: 'File not found' });
+      if (error.code === "ENOENT") {
+        return res.status(404).json({ message: "File not found" });
       }
       throw error;
     }
-    
+
     const docIndex = folder.docs.indexOf(doc);
     folder.docs.splice(docIndex, 1);
+
+    await uc.save();
+    res.status(200).json(uc);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const deleteFolder = async (req, res) => {
+  try {
+    const { sigla, folderName } = req.params;
+
+    const uc = await UC.findOne({ sigla }).exec();
+    if (!uc) {
+      return res.status(404).json({ message: "UC not found" });
+    }
+
+    const folderIndex = uc.conteudo.findIndex(
+      (folder) => folder.nome === folderName
+    );
+    if (folderIndex === -1) {
+      return res.status(404).json({ message: "Folder not found" });
+    }
+
+    const folder = uc.conteudo[folderIndex];
+
+    // Delete all files in the folder
+    for (const doc of folder.docs) {
+      const filePath = path.join(
+        __dirname,
+        `../uploads/${sigla}/${folderName}/docs/${doc.nome}`
+      );
+      try {
+        await fs.promises.unlink(filePath);
+      } catch (error) {
+        if (error.code !== "ENOENT") {
+          throw error;
+        }
+      }
+    }
+
+    uc.conteudo.splice(folderIndex, 1);
 
     await uc.save();
     res.status(200).json(uc);
@@ -164,4 +205,5 @@ module.exports = {
   deleteUC,
   insertDoc,
   deleteDoc,
+  deleteFolder,
 };

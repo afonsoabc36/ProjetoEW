@@ -9,6 +9,7 @@ const {
   deleteUC,
   insertDoc,
   deleteDoc,
+  deleteFolder,
 } = require("../Controllers/UCsController");
 
 const verifyJWT = require("../middleware/veriftJWT");
@@ -26,8 +27,13 @@ router.get("/:sigla", getUCBySigla);
 router.get("/docentes/:sigla", getDocentesBySigla);
 router.post("/", insertUC);
 
-router.post("/:sigla/conteudo/:folderName", uploadDocs.single("doc"), insertDoc);
+router.post(
+  "/:sigla/conteudo/:folderName",
+  uploadDocs.single("doc"),
+  insertDoc
+);
 router.delete("/:sigla/conteudo/:folderName/:docName", deleteDoc);
+router.delete("/:sigla/conteudo/:folderName", deleteFolder);
 
 router.put("/:sigla", updateUC);
 router.delete("/:sigla", deleteUC);

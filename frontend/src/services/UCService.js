@@ -46,13 +46,23 @@ const createUC = async (newUC) => {
 };
 
 const insertDoc = async (sigla, folderName, doc) => {
-  const response = await api.post(`${API_URL}/${sigla}/conteudo/${folderName}`, doc);
+  const response = await api.post(
+    `${API_URL}/${sigla}/conteudo/${folderName}`,
+    doc
+  );
   return response.data;
 };
 
 const deleteDoc = async (sigla, folderName, docName) => {
   const response = await api.delete(
     `${API_URL}/${sigla}/conteudo/${folderName}/${docName}`
+  );
+  return response.data;
+};
+
+const deleteFolder = async (sigla, folderName) => {
+  const response = await api.delete(
+    `${API_URL}/${sigla}/conteudo/${folderName}`
   );
   return response.data;
 };
@@ -66,6 +76,7 @@ const UCService = {
   createUC,
   insertDoc,
   deleteDoc,
+  deleteFolder,
 };
 
 export default UCService;
