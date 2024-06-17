@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+    environment:
+      - REACT_APP_GOOGLE_CLIENT_ID=1005901227867-mllua3hehi0ho627a23noujpbm4jid8o.apps.googleusercontent.com
+      - REACT_APP_GOOGLE_CLIENT_SECRET=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
+      - REACT_APP_FACEBOOK_APP_ID=778408184274842
+      - REACT_APP_FACEBOOK_APP_SECRET=d990603828be2c120e8c8e9f9f5f8882
+      - REACT_APP_GITHUB_CLIENT_ID=Ov23linS2oaHPM5YqYQE
+      - REACT_APP_GITHUB_CLIENT_SECRET=d9cb85caa828e8446b998d5e4e7d263f09d98d83
+
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+    environment:
+      - PORT=4000
+      - DATABASE_URI=mongodb://localhost:27017/Ucs
+      - REACT_APP_GOOGLE_CLIENT_ID=1005901227867-mllua3hehi0ho627a23noujpbm4jid8o.apps.googleusercontent.com
+      - REACT_APP_GOOGLE_CLIENT_SECRET=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
+      - REACT_APP_FACEBOOK_APP_ID=778408184274842
+      - REACT_APP_FACEBOOK_APP_SECRET=d990603828be2c120e8c8e9f9f5f8882
+      - ACCESS_TOKEN_SECRET=ffafff2c913a55c1e9e6280d6f51ee5b3ed39a2f6a613664c13b6094d80259c8448d46dd14dddda2afbfdf8f37457f64eaca6461720c6671fcbe950473831471
+      - REACT_APP_GITHUB_CLIENT_ID=Ov23linS2oaHPM5YqYQE
+      - REACT_APP_GITHUB_CLIENT_SECRET=d9cb85caa828e8446b998d5e4e7d263f09d98d83
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
