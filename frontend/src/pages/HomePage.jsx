@@ -50,10 +50,14 @@ const HomePage = () => {
           uc &&
           (uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
             uc.sigla.toLowerCase().includes(searchUC.toLowerCase()))
+      ).sort(
+        (a, b) => a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
       );
 
     const otherUCsFiltered = filtered.filter(
       (uc) => !favoriteUCSiglas.has(uc.sigla)
+    ).sort(
+      (a, b) => a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
     );
 
     const mergedUCs = [...favoriteUCsFiltered, ...otherUCsFiltered];

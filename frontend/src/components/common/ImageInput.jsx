@@ -1,6 +1,23 @@
-import React from "react";
+import React ,{ useState } from "react";
 
 const ImageInput = ({ onImageChange, multiple = false }) => {
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const handleImageUpload = (event) => {
+    const files = event.target.files;
+    console.log(files)
+    console.log(files[0])
+    console.log(files.length)
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      console.log('boas1')
+      reader.onload = (e) => setPreviewImage(e.target.result);
+      console.log('boas2')
+      reader.readAsDataURL(files[0]);
+      onImageChange(event);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center w-full">
       <label
@@ -33,11 +50,16 @@ const ImageInput = ({ onImageChange, multiple = false }) => {
           id="dropzone-file"
           type="file"
           className="hidden"
-          onChange={onImageChange}
+          onChange={handleImageUpload}
           multiple={multiple}
           accept="image/*,video/*"
         />
       </label>
+      {previewImage && (
+        <div className="flex-shrink-0 ml-4">
+          <img src={previewImage} alt="Uploaded preview" style={{ maxWidth: "200px", maxHeight: "200px" }} />
+        </div>
+      )}
     </div>
   );
 };
