@@ -45,8 +45,10 @@ const HomePage = () => {
       : ucs.filter((uc) =>
           uc.docentes.some(
             (docente) =>
-              (docente.email && docente.email.toLowerCase().includes(searchUC.toLowerCase())) ||
-              (docente.nome && docente.nome.toLowerCase().includes(searchUC.toLowerCase()))
+              (docente.email &&
+                docente.email.toLowerCase().includes(searchUC.toLowerCase())) ||
+              (docente.nome &&
+                docente.nome.toLowerCase().includes(searchUC.toLowerCase()))
           )
         );
 
@@ -62,18 +64,23 @@ const HomePage = () => {
               uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
             : uc.docentes.some(
                 (docente) =>
-                  (docente.email && docente.email.toLowerCase().includes(searchUC.toLowerCase())) ||
-                  (docente.nome && docente.nome.toLowerCase().includes(searchUC.toLowerCase()))
+                  (docente.email &&
+                    docente.email
+                      .toLowerCase()
+                      .includes(searchUC.toLowerCase())) ||
+                  (docente.nome &&
+                    docente.nome.toLowerCase().includes(searchUC.toLowerCase()))
               ))
-      ).sort(
-        (a, b) => a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
+      )
+      .sort((a, b) =>
+        a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
       );
 
-    const otherUCsFiltered = filtered.filter(
-      (uc) => !favoriteUCSiglas.has(uc.sigla)
-    ).sort(
-      (a, b) => a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
-    );
+    const otherUCsFiltered = filtered
+      .filter((uc) => !favoriteUCSiglas.has(uc.sigla))
+      .sort((a, b) =>
+        a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
+      );
 
     const mergedUCs = [...favoriteUCsFiltered, ...otherUCsFiltered];
 
@@ -110,63 +117,67 @@ const HomePage = () => {
   return (
     <div className="p-4">
       <h1 className="text-4xl text-center mt-8">Unidades Curriculares</h1>
-      <div className="flex items-center mt-4">
-        <Input
-          type="search"
-          placeholder="Pesquisar UC"
-          className="w-full mt-4"
-          id="searchUC"
-          value={searchUC}
-          onChange={onChangeSearch}
-        />
-        <select
-            className="p-2 bg-gray-700 text-white rounded"
+      <div className="mt-4 min-w-full flex p-4">
+        <div className="w-[80%] mx-6">
+          <Input
+            type="search"
+            placeholder="Pesquisar UC"
+            className="mt-4"
+            id="searchUC"
+            value={searchUC}
+            onChange={onChangeSearch}
+          />
+        </div>
+        <div className="w-[20%]">
+          <select
+            className="w-full p-2 bg-gray-700 text-white rounded mt-4"
             value={searchPreference}
             onChange={(e) => setSearchPreference(e.target.value === "true")}
           >
             <option value="true">UCs</option>
             <option value="false">Docente</option>
-        </select>
+          </select>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      {filteredUCs?.map((uc) => (
-        <div
-          key={uc._id}
-          className="block bg-gray-600 m-4 border border-gray-500 rounded-lg shadow-xl transform transition duration-500 hover:scale-[101%] cursor-pointer  overflow-hidden"
-          onClick={() => window.location.replace(`/uc/${uc.sigla}`)}
-        >
-          <div className="text-center">
-            <div className="p-6 bg-gray-700">
-              <h2 className="text-bold text-2xl">{uc.sigla}</h2>
-              <button
-                className="absolute top-2 right-2 h-6 w-6"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleFavorite(uc.sigla);
-                }}
-              >
-                {favoriteUCs.includes(uc.sigla) ? (
-                  <img
-                    src={process.env.PUBLIC_URL + "/filledStar.png"}
-                    alt="Filled Star"
-                    className="h-full w-full"
-                  />
-                ) : (
-                  <img
-                    src={process.env.PUBLIC_URL + "/unfilledStar.png"}
-                    alt="Unfilled Star"
-                    className="h-full w-full"
-                  />
-                )}
-              </button>
-            </div>
-            <hr className="border border-gray-500" />
-            <div className="p-4">
-              <h4>{uc.titulo}</h4>
+        {filteredUCs?.map((uc) => (
+          <div
+            key={uc._id}
+            className="block bg-gray-600 m-4 border border-gray-500 rounded-lg shadow-xl transform transition duration-500 hover:scale-[101%] cursor-pointer  overflow-hidden"
+            onClick={() => window.location.replace(`/uc/${uc.sigla}`)}
+          >
+            <div className="text-center">
+              <div className="p-6 bg-gray-700">
+                <h2 className="text-bold text-2xl">{uc.sigla}</h2>
+                <button
+                  className="absolute top-2 right-2 h-6 w-6"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(uc.sigla);
+                  }}
+                >
+                  {favoriteUCs.includes(uc.sigla) ? (
+                    <img
+                      src={process.env.PUBLIC_URL + "/filledStar.png"}
+                      alt="Filled Star"
+                      className="h-full w-full"
+                    />
+                  ) : (
+                    <img
+                      src={process.env.PUBLIC_URL + "/unfilledStar.png"}
+                      alt="Unfilled Star"
+                      className="h-full w-full"
+                    />
+                  )}
+                </button>
+              </div>
+              <hr className="border border-gray-500" />
+              <div className="p-4">
+                <h4>{uc.titulo}</h4>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
       </div>
       {user.role !== "student" && (
         <div className="p-4">

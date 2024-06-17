@@ -3,13 +3,23 @@ const User = require("../Models/UserModel");
 const { OAuth2Client } = require("google-auth-library");
 
 const register = async (req, res) => {
-  const { email, password, role } = req.body;
+  var { email, password, role, affiliation, department, course } = req.body;
+  role = "student";
 
   try {
-    const user = await User.create({ email, password, role });
+    const user = await User.create({
+      email,
+      password,
+      role,
+      affiliation,
+      department,
+      course,
+    });
+    console.log(user);
     const token = jwt.sign({ email, role }, process.env.ACCESS_TOKEN_SECRET);
     res.status(201).json({ token });
   } catch (error) {
+    console.error("Failed to register user", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };

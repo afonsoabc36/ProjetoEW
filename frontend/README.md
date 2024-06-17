@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# Relatório de Engenharia Web - Base de Dados de Acordãos
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## **Autores**
 
-## Available Scripts
+Afonso Oliveira e Silva, A100604
+Eduardo Miguel Pacheco Silva, A95345
+Martim de Oliveira e Melo Ferreia, A100653
 
-In the project directory, you can run:
+## **Introdução**
 
-### `npm start`
+Este relatório surge no âmbito da Unidade Curricular de Engenharia Web, em que nos foi proposto a concepção de uma aplicação _Web_.
+A proposta escolhida pelo grupo foi a proposta 5, Gerador de Websites para UC.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## **Objectivos**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Analisar o dataset de uma UC fornecido e tratá-lo de modo a criar um modelo em MongoDB para o guardar.
+- Criar uma interface web de navegação em toda a informação disponibilizada, semelhante ao das UC que se listam no slide seguinte (há espaço para melhorar/alterar o design e até sugerir novas funcionalidades).
+- Criar uma funcionalidade para a criação de novas UC (devem implementar todas as operações de CRUD sobre uma UC).
+- Ter várias possibilidades de pesquisa sobre as UC criadas e ter uma interface centralizada para aceder ao site de cada uma.
+- Permitir que o utilizador que criou a UC edite a informação desta.
 
-### `npm test`
+## **API de dados** (Backend)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### **Base de dados**
 
-### `npm run build`
+A base de dados da nossa aplicação foi construída baseia-se num sistema NoSQL, o MongoDB.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Criamos 2 coleções, ucs e users.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+A coleção **ucs** armazena toda a informação sobre cada unidade curricular criado na aplicação, como o título e sigla, a equipa docente, os horários e sumários de aulas, datas importantes como exames e entregas de projetos, e ainda conteúdo adicionado pela equipa docente.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+A coleção **users** armazena toda a informação sobre os utilizadores da aplicação, como o seu _role_ (administrador, docente ou estudante), o seu _nome_, _email_, e outras informações pessoais, e ainda informações como a _data de criação_ da conta, a _data de modificação_ de informações pessoais e a _data do último acesso_ à aplicação.
 
-### `npm run eject`
+### **Rotas**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+A nossa api de dados responde às seguintes rotas para obter as informações das _ucs_ e dos _users_.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### /auth
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- `POST /register` : Esta rota permite o registo de novos utilizadores na aplicação.
+- `POST /login` : Esta rota permite o login a utilizadores já registados na aplicação, mediante as credenciais corretas.
+- `POST /googleLogin` : Esta rota utiliza o sistema da Google OAuth 2.0 para realizar o login do utilizador.
+- `POST /githubLogin` : Esta rota utiliza o sistema do GitHub Authentication para realizar o login do utilizador.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+#### /users
 
-## Learn More
+- `GET /` : Esta rota permite obter uma lista de todos os utilizadores da aplicação.
+- `GET /me` : Esta rota permite obter as informações que tem login feito na aplicação, através do seu token.
+- `GET /:email` : Esta rota permite obter as informações do usuário cujo email corresponde ao email passado na rota.
+- `GET /:email/favorites` : Esta rota permite obter apenas as ucs favoritas do utilizador com o email passado na rota.
+- `POST /` : Esta rota permite o registo de novos utilizadores na aplicação.
+- `PUT /:email` : Esta rota permite a atualização dos dados do utilizador com o email passado na rota.
+- `PUT /:email/favorites` : Esta rota permite a atualização das ucs favoritas do utilizador com o email passado na rota.
+- `DELETE /:email` : Esta rota permite eliminar da base de dados utilizador com o email passado na rota.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### /UCs
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- `GET /` : Esta rota permite obter uma lista de todas as unidades curriculares da aplicação.
+- `GET /:sigla` : Esta rota permite obter as informações da unidade curricular cuja sigla corresponde à sigla passsada na rota.
+- `GET /:email` : Esta rota permite obter as informações do usuário cujo email corresponde ao email passado na rota.
+- `GET /:email/favorites` : Esta rota permite obter apenas as ucs favoritas do utilizador com o email passado na rota.
+- `POST /` : Esta rota permite o registo de novos utilizadores na aplicação.
+- `PUT /:email` : Esta rota permite a atualização dos dados do utilizador com o email passado na rota.
+- `PUT /:email/favorites` : Esta rota permite a atualização das ucs favoritas do utilizador com o email passado na rota.
+- `DELETE /:email` : Esta rota permite eliminar da base de dados utilizador com o email passado na rota.
 
-### Code Splitting
+router.get("/", getUCs);
+router.get("/:sigla", getUCBySigla);
+router.get("/docentes/:sigla", getDocentesBySigla);
+router.post("/", insertUC);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+router.post(
+"/:sigla/conteudo/:folderName",
+uploadDocs.single("doc"),
+insertDoc
+);
+router.delete("/:sigla/conteudo/:folderName/:docName", deleteDoc);
+router.delete("/:sigla/conteudo/:folderName", deleteFolder);
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+router.put("/:sigla", updateUC);
+router.delete("/:sigla", deleteUC);

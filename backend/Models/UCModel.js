@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const DocenteModel = require("./DocenteModel");
+const UserModel = require("./UserModel");
 const Schema = mongoose.Schema;
 
 const DocSchema = new Schema({
@@ -34,7 +34,7 @@ const UCSchema = new Schema({
     required: true,
     trim: true,
   },
-  docentes: [DocenteModel.schema],
+  docentes: [UserModel.schema],
   horario: {
     praticas: {
       type: [String],

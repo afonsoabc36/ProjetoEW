@@ -15,12 +15,14 @@ import DocViewerPage from "./pages/UCPage/DocViewerPage";
 import PrivateRoute from "./components/common/PrivateRoute";
 import GitHubCallback from "./components/common/GithubCallback";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/github-callback" element={<GitHubCallback />} />
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<HomePage />} />

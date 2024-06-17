@@ -2,13 +2,9 @@ import api from "./apiService";
 
 const API_URL = "/auth";
 
-const register = async (username, email, password) => {
+const register = async (data) => {
   try {
-    const response = await api.post(`${API_URL}/register`, {
-      username,
-      email,
-      password,
-    });
+    const response = await api.post(`${API_URL}/register`, data);
     return response.data;
   } catch (error) {
     return Promise.reject(error.response.data);

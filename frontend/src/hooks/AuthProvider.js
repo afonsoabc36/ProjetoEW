@@ -46,6 +46,22 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const registerAction = async (data) => {
+    try {
+      const res = await authService.register(data);
+      if (res.token) {
+        localStorage.setItem("accessToken", res.token);
+        setToken(res.token);
+        setUser(res.data);
+        navigate("/");
+        return;
+      }
+    } catch (error) {
+      console.error("Failed to register", error.message);
+      throw Error(error);
+    }
+  };
+
   const googleLoginAction = async (tokenId) => {
     try {
       const res = await authService.googleLogin(tokenId);
@@ -95,6 +111,7 @@ const AuthProvider = ({ children }) => {
         loginAction,
         googleLoginAction,
         githubLoginAction,
+        registerAction,
         logOut,
       }}
     >

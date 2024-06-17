@@ -1,13 +1,19 @@
+import React, { useState } from "react";
 import Input from "../components/common/Input";
-import { useAuth } from "../hooks/AuthProvider";
 import Button from "../components/common/Button";
-import React, { useState, useEffect } from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/AuthProvider";
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const auth = useAuth();
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    name: "",
+    affiliation: "",
+    department: "",
+    course: "",
+  });
 
   const onChange = (e) => {
     const { id, value } = e.target;
@@ -17,40 +23,40 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!credentials.email || !credentials.password) {
-      alert("Por favor, preencha todos os campos");
+    if (!credentials.email || !credentials.password || !credentials.name) {
+      alert("Por favor, preencha todos os campos obrigatórios");
       return;
     }
 
     try {
-      await auth.loginAction(credentials);
+      await auth.registerAction(credentials);
     } catch (error) {
-      console.error("Failed to login", error.message);
-      alert("Não foi possível iniciar sessão. Por favor, tente novamente.");
+      console.error("Failed to register", error.message);
+      alert("Não foi possível registrar. Por favor, tente novamente.");
     }
   };
 
-  //GoogleAuth
+  // GoogleAuth
   const handleGoogleSuccess = async (response) => {
     const tokenId = response.credential;
     try {
-      await auth.googleLoginAction(tokenId);
+      await auth.googleRegisterAction(tokenId);
     } catch (error) {
-      console.error("Failed to login with Google", error.message);
+      console.error("Failed to register with Google", error.message);
       alert(
-        "Não foi possível iniciar sessão com o Google. Por favor, tente novamente."
+        "Não foi possível registrar com o Google. Por favor, tente novamente."
       );
     }
   };
 
   const handleGoogleFailure = (error) => {
-    console.error("Google login failed", error);
+    console.error("Google registration failed", error);
     alert(
-      "Não foi possível iniciar sessão com o Google. Por favor, tente novamente."
+      "Não foi possível registrar com o Google. Por favor, tente novamente."
     );
   };
 
-  //GitHubAuth
+  // GitHubAuth
   const handleGitHubLogin = async () => {
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
     const redirectUri = encodeURIComponent(
@@ -63,8 +69,15 @@ const LoginPage = () => {
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="bg-dark min-h-screen p-14 text-white">
-        <h1 className="text-white font-bold text-3xl mb-4">Login</h1>
+        <h1 className="text-white font-bold text-3xl mb-4">Registrar</h1>
         <form onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            value={credentials.name}
+            id="name"
+            placeholder="Insira o seu nome"
+            onChange={onChange}
+          />
           <Input
             type="email"
             value={credentials.email}
@@ -79,31 +92,36 @@ const LoginPage = () => {
             placeholder="Insira a sua palavra-passe"
             onChange={onChange}
           />
-          {/* <span>
-            Não estás registado?{" "}
-            <a href="/register" className="text-blue-400">
-              Regista-te
-            </a>
-          </span> */}
-          <div className="flex mt-4 min-w-full">
-            <Button className="w-[50%]" type="submit">
-              Entrar
-            </Button>
-
-            <div className="w-[50%] ml-2">
-              <Link to="/register">
-                <Button variant="primary" className="w-full">
-                  Registar
-                </Button>
-              </Link>
-            </div>
-          </div>
+          <Input
+            type="text"
+            value={credentials.affiliation}
+            id="affiliation"
+            placeholder="Insira a sua afiliação"
+            onChange={onChange}
+          />
+          <Input
+            type="text"
+            value={credentials.department}
+            id="department"
+            placeholder="Insira o seu departamento"
+            onChange={onChange}
+          />
+          <Input
+            type="text"
+            value={credentials.course}
+            id="course"
+            placeholder="Insira o seu curso"
+            onChange={onChange}
+          />
+          <Button className="mt-4 min-w-full" type="submit">
+            Registrar
+          </Button>
         </form>
         <div className="mt-4">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onFailure={handleGoogleFailure}
-            buttonText="Entrar com Google"
+            buttonText="Registrar com Google"
           />
         </div>
         <div className="mt-4">
@@ -116,7 +134,7 @@ const LoginPage = () => {
               alt="GitHub logo"
               className="h-5 w-5 mr-2"
             />
-            Entrar com GitHub
+            Registrar com GitHub
           </button>
         </div>
       </div>
@@ -124,4 +142,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

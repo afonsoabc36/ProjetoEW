@@ -7,6 +7,10 @@ const Layout = () => {
   const auth = useAuth();
   const { user } = auth;
 
+  if (!user) {
+    return null;
+  }
+
   const isAdmin = user.role == "admin";
 
   return (
