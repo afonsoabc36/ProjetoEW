@@ -1,15 +1,25 @@
-import { Link, useParams } from "react-router-dom";
 import UCService from "../../services/UCService";
 import Input from "../../components/common/Input";
+import { useAuth } from "../../hooks/AuthProvider"; 
+import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/common/Button";
 
 const DocsPage = () => {
   const { sigla } = useParams();
+  const { user } = useAuth();
   const [uc, setUC] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [folderName, setFolderName] = useState("");
   const [fileName, setFileName] = useState("");
+  const [folderName, setFolderName] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const isAdmin = user?.role === "admin";
+  const isTeacher = user?.role === "teacher";
+  const isDocente = uc?.docentes?.some(
+    (docente) => docente.email === user.email
+  );
+
+  const modifyCondition = (isAdmin || (isTeacher && isDocente))
 
   useEffect(() => {
     const fetchUC = async () => {
@@ -99,12 +109,14 @@ const DocsPage = () => {
             <div key={folder.nome} className="mb-6 bg-gray-700 rounded-lg">
               <div className="flex justify-between items-center p-4">
                 <h2 className="text-2xl font-semibold">{folder.nome}</h2>
-                <button
-                  className="text-red-500 hover:text-red-700"
-                  onClick={() => handleDeleteFolder(folder.nome)}
-                >
-                  Remover Pasta
-                </button>
+                {(modifyCondition) && (
+                  <button
+                    className="text-red-500 hover:text-red-700"
+                    onClick={() => handleDeleteFolder(folder.nome)}
+                  >
+                    Remover Pasta
+                  </button>
+                )}
               </div>
               <ul className="bg-gray-800 p-4 rounded-b-lg shadow-lg">
                 {folder.docs.map((doc) => (
@@ -119,12 +131,14 @@ const DocsPage = () => {
                         {doc.nome}
                       </p>
                     </Link>
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(folder.nome, doc.nome)}
-                    >
-                      Remover
-                    </button>
+                    {(modifyCondition) && (
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDelete(folder.nome, doc.nome)}
+                      >
+                        Remover
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -133,35 +147,37 @@ const DocsPage = () => {
         </div>
       )}
 
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-4">Pasta do documento</h2>
-        <Input
-          id="folderName"
-          type="text"
-          placeholder="Pasta onde pretende colocar o documento"
-          value={folderName}
-          onChange={handleFolderNameChange}
-          className="mb-4 p-2 border rounded-lg w-full border-gray-600"
-        />
-        <Input
-          id="selectedFileDisplay"
-          type="text"
-          placeholder={fileName || "Nenhum arquivo escolhido"}
-          value={fileName}
-          readOnly
-          className="mb-4 p-2 border rounded-lg w-full border-gray-600 bg-gray-700 text-gray-400"
-        />
-        <Input
-          id="selectedFile"
-          type="file"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-400 rounded-lg cursor-pointer focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400"
-        />
+      {(modifyCondition) && (
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold mb-4">Pasta do documento</h2>
+          <Input
+            id="folderName"
+            type="text"
+            placeholder="Pasta onde pretende colocar o documento"
+            value={folderName}
+            onChange={handleFolderNameChange}
+            className="mb-4 p-2 border rounded-lg w-full border-gray-600"
+          />
+          <Input
+            id="selectedFileDisplay"
+            type="text"
+            placeholder={fileName || "Nenhum arquivo escolhido"}
+            value={fileName}
+            readOnly
+            className="mb-4 p-2 border rounded-lg w-full border-gray-600 bg-gray-700 text-gray-400"
+          />
+          <Input
+            id="selectedFile"
+            type="file"
+            onChange={handleFileChange}
+            className="block w-full text-sm text-gray-400 rounded-lg cursor-pointer focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400"
+          />
 
-        <Button onClick={handleUpload} className="py-2 px-4 rounded-lg">
-          Upload
-        </Button>
-      </div>
+          <Button onClick={handleUpload} className="py-2 px-4 rounded-lg">
+            Upload
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

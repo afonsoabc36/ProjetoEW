@@ -6,9 +6,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
   const auth = useAuth();
-
   const [credentials, setCredentials] = useState({ email: "", password: "" });
-  console.log("login " + process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
   const onChange = (e) => {
     const { id, value } = e.target;
@@ -55,6 +53,14 @@ const LoginPage = () => {
     );
   };
 
+  //GitHubAuth
+  const handleGitHubLogin = async () => {
+    const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+    const redirectUri = encodeURIComponent("http://localhost:3000/github-callback");
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+    window.location.href = githubAuthUrl;
+  };
+
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="bg-dark min-h-screen p-14 text-white">
@@ -90,6 +96,11 @@ const LoginPage = () => {
             onFailure={handleGoogleFailure}
             buttonText="Entrar com Google"
           />
+        </div>
+        <div className="mt-4">
+          <button onClick={handleGitHubLogin} className="min-w-full"> {/*TODO: Mudar o style*/}
+            Entrar com GitHub
+          </button>
         </div>
       </div>
     </GoogleOAuthProvider>

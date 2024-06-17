@@ -99,7 +99,7 @@ const HomePage = () => {
         value={searchUC}
         onChange={onChangeSearch}
       />
-
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {filteredUCs?.map((uc) => (
         <div
           key={uc._id}
@@ -138,6 +138,7 @@ const HomePage = () => {
           </div>
         </div>
       ))}
+      </div>
       {user.role !== "student" && (
         <div className="p-4">
           <Link to="/uc/criar">

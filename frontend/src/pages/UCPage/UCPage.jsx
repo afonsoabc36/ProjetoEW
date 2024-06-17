@@ -51,23 +51,25 @@ const UCPage = () => {
           <h2 className="text-lg mt-4">{uc?.titulo}</h2>
         </div>
         <div className="pb-5 flex-row justify-end md:mt-10">
-          {(isAdmin || (isTeacher && isDocente)) && (
-            <div className="flex  mt-4 md:mt-0 md:ml-10">
-              <Link to={`/uc/${sigla}/editar`}>
-                <Button variant="primary">Editar UC</Button>
-              </Link>
-              <Button
-                className="mx-2 mt-2 md:mt-0"
-                variant="danger"
-                onClick={handleDeleteUC}
-              >
-                Apagar UC
-              </Button>
-              <Link to={`/uc/${sigla}/conteudo`}>
-                <Button variant="primary">Ver Conteúdo</Button>
-              </Link>
-            </div>
-          )}
+        <div className="flex mt-4 md:mt-0 md:ml-10">
+            {(isAdmin || (isTeacher && isDocente)) && (
+              <>
+                <Link to={`/uc/${sigla}/editar`}>
+                  <Button variant="primary">Editar UC</Button>
+                </Link>
+                <Button
+                  className="mx-2 mt-2 md:mt-0"
+                  variant="danger"
+                  onClick={handleDeleteUC}
+                >
+                  Apagar UC
+                </Button>
+              </>
+            )}
+            <Link to={`/uc/${sigla}/conteudo`}>
+              <Button variant="primary">Ver Conteúdo</Button>
+            </Link>
+          </div>
         </div>
       </div>
       <div className="flex flex-col md:grid md:grid-cols-2 gap-4">

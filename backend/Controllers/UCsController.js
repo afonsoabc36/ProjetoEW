@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const fsExtra = require("fs-extra");
 const UC = require("../Models/UCModel");
 
 const getUCs = async (req, res) => {
@@ -172,7 +173,6 @@ const deleteFolder = async (req, res) => {
 
     const folder = uc.conteudo[folderIndex];
 
-    // Delete all files in the folder
     for (const doc of folder.docs) {
       const filePath = path.join(
         __dirname,
@@ -186,6 +186,12 @@ const deleteFolder = async (req, res) => {
         }
       }
     }
+
+    const folderPath = path.join(
+      __dirname,
+      `../uploads/${sigla}/${folderName}`
+    );
+    await fsExtra.remove(folderPath);
 
     uc.conteudo.splice(folderIndex, 1);
 

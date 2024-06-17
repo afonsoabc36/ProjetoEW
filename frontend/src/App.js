@@ -1,25 +1,27 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import NotFoundPage from "./pages/NotFoundPage";
+import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
+import UCPage from "./pages/UCPage/UCPage";
+import ProfilePage from "./pages/ProfilePage";
+import DocsPage from "./pages/UCPage/DocsPage";
 import AuthProvider from "./hooks/AuthProvider";
+import NotFoundPage from "./pages/NotFoundPage";
+import Unauthorized from "./pages/Unauthorized";
+import { Routes, Route } from "react-router-dom";
+import AdminCriarPage from "./pages/AdminCriarPage";
+import EditarUCPage from "./pages/UCPage/EditarUCPage";
+import GitHubCallback from "./components/common/githubCallback";
+import DocViewerPage from "./pages/UCPage/DocViewerPage";
 import PrivateRoute from "./components/common/PrivateRoute";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import UCPage from "./pages/UCPage/UCPage";
-import Unauthorized from "./pages/Unauthorized";
-import EditarUCPage from "./pages/UCPage/EditarUCPage";
-import ProfilePage from "./pages/ProfilePage";
-import AdminPage from "./pages/AdminPage";
-import AdminCriarPage from "./pages/AdminCriarPage";
-import DocsPage from "./pages/UCPage/DocsPage";
-import DocViewerPage from "./pages/UCPage/DocViewerPage";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/github-callback" element={<GitHubCallback />} />
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<HomePage />} />
 

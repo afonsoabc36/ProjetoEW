@@ -6,14 +6,14 @@ import { useContext, createContext, useState, useEffect } from "react";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("accessToken") || "");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [token, setToken] = useState(localStorage.getItem("accessToken") || "");
 
   useEffect(() => {
-    if (token) {
+    if (token !== "") {
       const fetchUserData = async () => {
         try {
           const res = await userService.getUser(token);
@@ -69,9 +69,28 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+
+  const githubLoginAction = async (tokenId) => {
+    try {
+      const res = await authService.githubLogin(tokenId);
+      if (res.token) {
+        localStorage.setItem("accessToken", res.token);
+        setToken(res.token);
+        setUser(res.data);
+        navigate("/");
+        return;
+      } else {
+        setError("GitHub login failed");
+      }
+    } catch (error) {
+      console.error("Failed to login with GitHub", error.message);
+      setError("Unable to login with GitHub. Please try again.");
+    }
+  };
+
   const logOut = () => {
-    setToken("");
     localStorage.removeItem("accessToken");
+    setToken("");
     setUser(null);
     navigate("/login");
   };
@@ -82,7 +101,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, error, loginAction, googleLoginAction, logOut }}
+      value={{ token, user, error, loginAction, googleLoginAction, githubLoginAction, logOut }}
     >
       {children}
     </AuthContext.Provider>

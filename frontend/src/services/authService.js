@@ -36,6 +36,15 @@ const googleLogin = async (tokenId) => {
   }
 };
 
-const authService = { register, login, googleLogin };
+const githubLogin = async (code) => {
+  try {
+    const response = await api.post(`${API_URL}/githubLogin`, { code });
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error.response.data);
+  }
+};
+
+const authService = { register, login, googleLogin, githubLogin };
 
 export default authService;
