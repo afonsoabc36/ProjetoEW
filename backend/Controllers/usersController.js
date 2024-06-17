@@ -59,7 +59,7 @@ const getUserFavoriteUCs = async (req, res) => {
 
 const insertUser = async (req, res) => {
   try {
-    const {
+    var {
       email,
       password,
       name,
@@ -70,9 +70,6 @@ const insertUser = async (req, res) => {
       role,
       favorites,
     } = req.body;
-
-    console.log(req.body);
-    console.log(req.file);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -124,8 +121,6 @@ const updateUser = async (req, res) => {
       password,
       favorites,
     };
-
-    console.log(req.file);
 
     if (req.file) {
       updates.avatar = `${req.file.path}`;

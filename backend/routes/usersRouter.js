@@ -23,7 +23,7 @@ router.get("/me", getUserDetails);
 router.get("/", getUsers);
 router.get("/:email", getUserByEmail);
 router.get("/:email/favorites", getUserFavoriteUCs);
-router.post("/", insertUser);
+router.post("/", uploadAvatar.single("avatar"), insertUser);
 router.put("/:email", uploadAvatar.single("avatar"), updateUser);
 router.put("/:email/favorites", updateUserFavorites);
 router.delete("/:email", deleteUser);

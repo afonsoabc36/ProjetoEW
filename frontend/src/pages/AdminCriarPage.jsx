@@ -66,10 +66,9 @@ const AdminCriarPage = ({ isNew = false }) => {
     e.preventDefault();
     try {
       let formData = new FormData();
-      formData.append("teste", "boas");
-      // for (const key in user) {
-      //   formData.append(key, user[key]);
-      // }
+      for (const key in user) {
+        formData.append(key, user[key]);
+      }
 
       if (isNew) {
         formData.append("password", "12345");

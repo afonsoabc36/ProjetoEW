@@ -33,7 +33,6 @@ export const deleteAUser = async (email) => {
 };
 
 export const createAUser = async (data) => {
-  console.log(data);
   const response = await api.post(`${USER_URL}`, data);
   return response.data;
 };
