@@ -13,6 +13,7 @@ const HomePage = () => {
   const [searchUC, setSearchUC] = useState("");
   const [favoriteUCs, setFavoriteUCs] = useState([]);
   const [filteredUCs, setFilteredUCs] = useState([]);
+  const [searchPreference, setSearchPreference] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,11 +36,19 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const filtered = ucs.filter(
-      (uc) =>
-        uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
-        uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
-    );
+    const filtered = searchPreference
+      ? ucs.filter(
+          (uc) =>
+            uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
+            uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
+        )
+      : ucs.filter((uc) =>
+          uc.docentes.some(
+            (docente) =>
+              (docente.email && docente.email.toLowerCase().includes(searchUC.toLowerCase())) ||
+              (docente.nome && docente.nome.toLowerCase().includes(searchUC.toLowerCase()))
+          )
+        );
 
     const favoriteUCSiglas = new Set(favoriteUCs);
 
@@ -48,8 +57,14 @@ const HomePage = () => {
       .filter(
         (uc) =>
           uc &&
-          (uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
-            uc.sigla.toLowerCase().includes(searchUC.toLowerCase()))
+          (searchPreference
+            ? uc.titulo.toLowerCase().includes(searchUC.toLowerCase()) ||
+              uc.sigla.toLowerCase().includes(searchUC.toLowerCase())
+            : uc.docentes.some(
+                (docente) =>
+                  (docente.email && docente.email.toLowerCase().includes(searchUC.toLowerCase())) ||
+                  (docente.nome && docente.nome.toLowerCase().includes(searchUC.toLowerCase()))
+              ))
       ).sort(
         (a, b) => a.titulo.toLowerCase().localeCompare(b.titulo.toLowerCase())
       );
@@ -63,7 +78,7 @@ const HomePage = () => {
     const mergedUCs = [...favoriteUCsFiltered, ...otherUCsFiltered];
 
     setFilteredUCs(mergedUCs);
-  }, [searchUC, ucs, favoriteUCs]);
+  }, [searchUC, ucs, favoriteUCs, searchPreference]);
 
   const onChangeSearch = (e) => {
     setSearchUC(e.target.value);
@@ -95,14 +110,24 @@ const HomePage = () => {
   return (
     <div className="p-4">
       <h1 className="text-4xl text-center mt-8">Unidades Curriculares</h1>
-      <Input
-        type="search"
-        placeholder="Pesquisar UC"
-        className="w-full mt-4"
-        id="searchUC"
-        value={searchUC}
-        onChange={onChangeSearch}
-      />
+      <div className="flex items-center mt-4">
+        <Input
+          type="search"
+          placeholder="Pesquisar UC"
+          className="w-full mt-4"
+          id="searchUC"
+          value={searchUC}
+          onChange={onChangeSearch}
+        />
+        <select
+            className="p-2 bg-gray-700 text-white rounded"
+            value={searchPreference}
+            onChange={(e) => setSearchPreference(e.target.value === "true")}
+          >
+            <option value="true">UCs</option>
+            <option value="false">Docente</option>
+        </select>
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {filteredUCs?.map((uc) => (
         <div
