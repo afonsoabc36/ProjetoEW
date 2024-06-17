@@ -113,7 +113,7 @@ Estas rotas requerem que o usuário tenha a _role_ de administrador.
 
 Dado por concluído este projeto, achamos que este projeto nos ajudou muito na consolidação de toda a matéria e de todo o material que nos foi fornecido durante as aulas práticas e teóricas de Engenharia Web.
 
-Foi um projeto desafiante de realizar, mas algo que gostámos de realizar e de todo o processo que o englobou.A
+Foi um projeto desafiante de realizar, mas algo que gostámos de realizar e de todo o processo que o englobou.
 
 Para além das funcionalidades básicas e dos objetivos do trabalho, adicionamos também a funcionalidade da página de Conteúdo para cada unidade curricular, permitindo aos docentes partilhar ficheiros mais facilmente com os alunos.
 
