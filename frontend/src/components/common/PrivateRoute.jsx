@@ -1,7 +1,7 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../hooks/AuthProvider";
 import Layout from "../layout/Layout";
+import { useAuth } from "../../hooks/AuthProvider";
+import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = ({ allowedRoles }) => {
   const { token, user } = useAuth();

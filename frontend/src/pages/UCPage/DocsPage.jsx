@@ -1,13 +1,13 @@
 import UCService from "../../services/UCService";
 import Input from "../../components/common/Input";
-import { useAuth } from "../../hooks/AuthProvider"; 
+import { useAuth } from "../../hooks/AuthProvider";
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/common/Button";
 
 const DocsPage = () => {
-  const { sigla } = useParams();
   const { user } = useAuth();
+  const { sigla } = useParams();
   const [uc, setUC] = useState(null);
   const [fileName, setFileName] = useState("");
   const [folderName, setFolderName] = useState("");
@@ -19,7 +19,7 @@ const DocsPage = () => {
     (docente) => docente.email === user.email
   );
 
-  const modifyCondition = (isAdmin || (isTeacher && isDocente))
+  const modifyCondition = isAdmin || (isTeacher && isDocente);
 
   useEffect(() => {
     const fetchUC = async () => {
@@ -109,7 +109,7 @@ const DocsPage = () => {
             <div key={folder.nome} className="mb-6 bg-gray-700 rounded-lg">
               <div className="flex justify-between items-center p-4">
                 <h2 className="text-2xl font-semibold">{folder.nome}</h2>
-                {(modifyCondition) && (
+                {modifyCondition && (
                   <button
                     className="text-red-500 hover:text-red-700"
                     onClick={() => handleDeleteFolder(folder.nome)}
@@ -131,7 +131,7 @@ const DocsPage = () => {
                         {doc.nome}
                       </p>
                     </Link>
-                    {(modifyCondition) && (
+                    {modifyCondition && (
                       <button
                         className="text-red-500 hover:text-red-700"
                         onClick={() => handleDelete(folder.nome, doc.nome)}
@@ -147,7 +147,7 @@ const DocsPage = () => {
         </div>
       )}
 
-      {(modifyCondition) && (
+      {modifyCondition && (
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">Pasta do documento</h2>
           <Input

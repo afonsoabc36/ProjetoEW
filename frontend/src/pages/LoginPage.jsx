@@ -34,10 +34,6 @@ const LoginPage = () => {
     const tokenId = response.credential;
     try {
       await auth.googleLoginAction(tokenId);
-      if (auth.error) {
-        alert(auth.error);
-        return;
-      }
     } catch (error) {
       console.error("Failed to login with Google", error.message);
       alert(
@@ -56,7 +52,9 @@ const LoginPage = () => {
   //GitHubAuth
   const handleGitHubLogin = async () => {
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
-    const redirectUri = encodeURIComponent("http://localhost:3000/github-callback");
+    const redirectUri = encodeURIComponent(
+      "http://localhost:3000/github-callback"
+    );
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
     window.location.href = githubAuthUrl;
   };
@@ -98,7 +96,9 @@ const LoginPage = () => {
           />
         </div>
         <div className="mt-4">
-          <button onClick={handleGitHubLogin} className="min-w-full"> {/*TODO: Mudar o style*/}
+          <button onClick={handleGitHubLogin} className="min-w-full">
+            {" "}
+            {/*TODO: Mudar o style*/}
             Entrar com GitHub
           </button>
         </div>

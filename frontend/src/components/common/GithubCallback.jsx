@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import queryString from 'query-string';
-import { useAuth } from '../../hooks/AuthProvider';
-import { useLocation, useNavigate } from 'react-router-dom';
+import queryString from "query-string";
+import React, { useEffect } from "react";
+import { useAuth } from "../../hooks/AuthProvider";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const GitHubCallback = () => {
   const { search } = useLocation();
@@ -13,9 +13,9 @@ const GitHubCallback = () => {
     if (code) {
       auth.githubLoginAction(code);
     } else {
-      console.error('GitHub login failed: No code found in URL query params');
-      alert('GitHub login failed. Please try again.');
-      navigate('/login');
+      console.error("GitHub login failed: No code found in URL query params");
+      alert("GitHub login failed. Please try again.");
+      navigate("/login");
     }
   }, [search, auth, navigate]);
 

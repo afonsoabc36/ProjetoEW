@@ -33,6 +33,7 @@ export const deleteAUser = async (email) => {
 };
 
 export const createAUser = async (data) => {
+  console.log(data);
   const response = await api.post(`${USER_URL}`, data);
   return response.data;
 };
@@ -43,8 +44,10 @@ export const updateAUser = async (email, data) => {
 };
 
 export const updateUserFavorites = async (email, favorites) => {
-  const response = await api.put(`${USER_URL}/${email}/favorites`, { favorites });
-    return response.data;
+  const response = await api.put(`${USER_URL}/${email}/favorites`, {
+    favorites,
+  });
+  return response.data;
 };
 
 const userService = {

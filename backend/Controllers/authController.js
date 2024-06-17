@@ -78,40 +78,43 @@ const githubLogin = async (req, res) => {
   try {
     const { code } = req.body;
 
-    const tokenData = await fetch('https://github.com/login/oauth/access_token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
-        client_secret: process.env.REACT_APP_GITHUB_CLIENT_SECRET,
-        code,
-      }),
-    }).then(res => res.json());
+    const tokenData = await fetch(
+      "https://github.com/login/oauth/access_token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
+          client_secret: process.env.REACT_APP_GITHUB_CLIENT_SECRET,
+          code,
+        }),
+      }
+    ).then((res) => res.json());
 
     const { access_token } = tokenData;
 
-    const githubEmails = await fetch('https://api.github.com/user/emails', {
+    const githubEmails = await fetch("https://api.github.com/user/emails", {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
-    }).then(res => res.json());
+    }).then((res) => res.json());
 
-    const primaryEmailObj = githubEmails.find(email => email.primary);
-    const primaryEmail = primaryEmailObj['email'];
+    const primaryEmailObj = githubEmails.find((email) => email.primary);
+    const email = primaryEmailObj["email"];
 
-    let user = await User.findOne({ email: primaryEmail });
+    let user = await User.findOne({ email: email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     const token = jwt.sign(
-      { primaryEmail, role: user.role },
+      { email, role: user.role },
       process.env.ACCESS_TOKEN_SECRET
     );
-    
+
     res.status(200).json({ data: user.toJSON(), token });
   } catch (error) {
     console.error("GitHub login failed", error);

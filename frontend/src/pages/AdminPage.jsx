@@ -8,21 +8,20 @@ import { prettierRole } from "../services/prettierService";
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchUser, setSearchUser] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     setFilteredUsers(
-      users.filter(
-        (user) => {
-          const name = user.name ? user.name.toLowerCase() : ""; // TODO: Nome pode estar vazio ?
-          return (
-            user.email.includes(searchUser.toLowerCase()) ||
-            name.includes(searchUser.toLowerCase())
-          );
-        })
+      users.filter((user) => {
+        const name = user.name ? user.name.toLowerCase() : ""; // TODO: Nome pode estar vazio ?
+        return (
+          user.email.includes(searchUser.toLowerCase()) ||
+          name.includes(searchUser.toLowerCase())
+        );
+      })
     );
-  }, [searchUser, users])
+  }, [searchUser, users]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,7 +56,7 @@ const AdminPage = () => {
   };
 
   return (
-    <div className="min-w-full">
+    <div className="min-w-full p-4">
       <div className="flex justify-between">
         <h1 className="text-white font-bold text-3xl mb-4">Utilizadores</h1>
         <Link to="/admin/criar">

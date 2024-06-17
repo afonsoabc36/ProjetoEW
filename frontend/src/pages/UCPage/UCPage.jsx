@@ -5,11 +5,12 @@ import { useAuth } from "../../hooks/AuthProvider";
 import { Link, useParams } from "react-router-dom";
 import Button from "../../components/common/Button";
 import { capitalizeFirstLetter } from "../../services/prettierService";
+import userService from "../../services/userService";
 
 const UCPage = () => {
+  const { user } = useAuth();
   const sigla = useParams().sigla;
   const [uc, setUC] = useState(null);
-  const { user } = useAuth();
 
   const isAdmin = user?.role === "admin";
   const isTeacher = user?.role === "teacher";
@@ -17,13 +18,23 @@ const UCPage = () => {
     (docente) => docente.email === user.email
   );
 
+  const userCanEdit = isAdmin || (isTeacher && isDocente);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await UCService.getUC(sigla);
-        data.docentes.forEach((element) => {
-          console.log(element);
+        data.docentes.map(async (docente) => {
+          try {
+            const user = await userService.getUserByEmail(docente.email);
+            docente.nome = user.nome;
+            docente.avatar = user.avatar;
+            return docente;
+          } catch {
+            return docente;
+          }
         });
+        console.log(data);
         setUC(data);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -44,15 +55,15 @@ const UCPage = () => {
   };
 
   return (
-    <div className="min-w-full sm:px-2 sm:py-2 md:px-0 md:py-4">
+    <div className="min-w-full sm:px-2 sm:py-2 md:p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div className="flex flex-col md:items-start md:pl-4 md:pr-8">
           <h1 className="font-bold text-3xl text-primary">{uc?.sigla}</h1>
           <h2 className="text-lg mt-4">{uc?.titulo}</h2>
         </div>
         <div className="pb-5 flex-row justify-end md:mt-10">
-        <div className="flex mt-4 md:mt-0 md:ml-10">
-            {(isAdmin || (isTeacher && isDocente)) && (
+          <div className="flex mt-4 md:mt-0 md:ml-10">
+            {userCanEdit && (
               <>
                 <Link to={`/uc/${sigla}/editar`}>
                   <Button variant="primary">Editar UC</Button>
@@ -100,7 +111,11 @@ const UCPage = () => {
                   >
                     <td className="p-6 flex items-center">
                       <img
-                        src="https://www.gravatar.com/avatar/?d=mp"
+                        src={
+                          docente?.avatar
+                            ? `http://localhost:4000/${docente.avatar}`
+                            : "https://www.gravatar.com/avatar/?d=mp"
+                        }
                         alt="user"
                         className="rounded w-16 h-16"
                       />

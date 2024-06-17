@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
 import Button from "../common/Button";
+import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthProvider";
 
 const Layout = () => {
@@ -17,7 +17,7 @@ const Layout = () => {
             <h1 className="text-2xl font-bold text-left">Gestor de UC's</h1>
           </Link>
           <div>
-            { (isAdmin) && (
+            {isAdmin && (
               <Link to="/admin" className="mr-2">
                 <Button variant="nobg" size="sm">
                   Admin
@@ -40,7 +40,7 @@ const Layout = () => {
           </div>
         </div>
       </nav>
-      <div className="container md:px-6 py-10 mx-auto space-y-8 md:flex-row md:space-y-0 md:justify-center mt-10">
+      <div className=" py-10 mx-auto space-y-8 md:flex-row md:space-y-0 md:justify-center mt-10">
         <Outlet />
       </div>
     </div>

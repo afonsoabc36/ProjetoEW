@@ -4,9 +4,12 @@ const User = require("../Models/UserModel");
 // Get current user details
 const getUserDetails = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.user.email }).select(
-      "-password"
-    ); // Exclude password
+    const user = await User.findOneAndUpdate(
+      { email: req.user.email },
+      { lastAccess: Date.now() },
+      { new: true }
+    ).select("-password"); // Exclude password
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -54,7 +57,6 @@ const getUserFavoriteUCs = async (req, res) => {
   }
 };
 
-
 const insertUser = async (req, res) => {
   try {
     const {
@@ -69,7 +71,14 @@ const insertUser = async (req, res) => {
       favorites,
     } = req.body;
 
+    console.log(req.body);
+    console.log(req.file);
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    if (req.file) {
+      avatar = `${req.file.path}`;
+    }
 
     const newUser = new User({
       email,
@@ -87,7 +96,6 @@ const insertUser = async (req, res) => {
 
     res.status(201).json(savedUser);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -95,8 +103,16 @@ const insertUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const email = req.params.email;
-    const { password, name, affiliation, department, course, avatar, role, favorites } =
-      req.body;
+    const {
+      password,
+      name,
+      affiliation,
+      department,
+      course,
+      avatar,
+      role,
+      favorites,
+    } = req.body;
 
     const updates = {
       name,
@@ -147,7 +163,7 @@ const updateUserFavorites = async (req, res) => {
     console.error("Failed to update favorites:", error);
     res.status(500).json({ message: "Failed to update favorites" });
   }
-}
+};
 
 const deleteUser = async (req, res) => {
   try {

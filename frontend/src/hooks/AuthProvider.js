@@ -8,7 +8,6 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem("accessToken") || "");
 
@@ -20,7 +19,6 @@ const AuthProvider = ({ children }) => {
           setUser(res);
         } catch (error) {
           console.error("Failed to fetch user data", error);
-          setError("Unable to fetch user data. Please try again.");
           throw Error(error);
         } finally {
           setLoading(false);
@@ -41,12 +39,9 @@ const AuthProvider = ({ children }) => {
         setUser(res.data);
         navigate("/");
         return;
-      } else {
-        setError("Invalid credentials");
       }
     } catch (error) {
       console.error("Failed to login", error.message);
-      setError("Unable to login. Please try again.");
       throw Error(error);
     }
   };
@@ -60,15 +55,11 @@ const AuthProvider = ({ children }) => {
         setUser(res.data);
         navigate("/");
         return;
-      } else {
-        setError("Google login failed");
       }
     } catch (error) {
       console.error("Failed to login with Google", error.message);
-      setError("Unable to login with Google. Please try again.");
     }
   };
-
 
   const githubLoginAction = async (tokenId) => {
     try {
@@ -79,12 +70,9 @@ const AuthProvider = ({ children }) => {
         setUser(res.data);
         navigate("/");
         return;
-      } else {
-        setError("GitHub login failed");
       }
     } catch (error) {
       console.error("Failed to login with GitHub", error.message);
-      setError("Unable to login with GitHub. Please try again.");
     }
   };
 
@@ -101,7 +89,14 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, user, error, loginAction, googleLoginAction, githubLoginAction, logOut }}
+      value={{
+        token,
+        user,
+        loginAction,
+        googleLoginAction,
+        githubLoginAction,
+        logOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

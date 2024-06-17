@@ -3,31 +3,31 @@ import api from "../../services/apiService";
 import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Button from "../../components/common/Button";
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import { Viewer, Worker } from "@react-pdf-viewer/core";
 
 const DocViewerPage = () => {
+  const [fileUrl, setFileUrl] = useState("");
   const { sigla, folderName, fileName } = useParams();
-  const [fileUrl, setFileUrl] = useState('');
 
   useEffect(() => {
     const fetchFile = async () => {
       try {
         const response = await api.get(
-            `/uploads/${sigla}/${folderName}/docs/${fileName}`,
-            {
-              responseType: "blob",
-            }
-          );
+          `/uploads/${sigla}/${folderName}/docs/${fileName}`,
+          {
+            responseType: "blob",
+          }
+        );
         if (response.status === 200) {
           const blob = await response.data;
           const url = URL.createObjectURL(blob);
           setFileUrl(url);
         } else {
-          console.error('Failed to fetch the file');
+          console.error("Failed to fetch the file");
         }
       } catch (error) {
-        console.error('Error fetching the file:', error);
+        console.error("Error fetching the file:", error);
       }
     };
 
@@ -35,15 +35,15 @@ const DocViewerPage = () => {
   }, [sigla, folderName, fileName]);
 
   const getFileType = (fileName) => {
-    const extension = fileName.split('.').pop().toLowerCase();
-    if (extension === 'pdf') {
-      return 'pdf';
-    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
-      return 'image';
-    } else if (['mp4', 'mov'].includes(extension)) {
-      return 'video';
+    const extension = fileName.split(".").pop().toLowerCase();
+    if (extension === "pdf") {
+      return "pdf";
+    } else if (["jpg", "jpeg", "png", "gif"].includes(extension)) {
+      return "image";
+    } else if (["mp4", "mov"].includes(extension)) {
+      return "video";
     } else {
-      return 'document';
+      return "document";
     }
   };
 
@@ -51,21 +51,23 @@ const DocViewerPage = () => {
     const type = getFileType(fileName);
 
     switch (type) {
-      case 'pdf':
+      case "pdf":
         return (
           <div className="doc-viewer p-6">
-            <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
+            <Worker
+              workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}
+            >
               <Viewer fileUrl={fileUrl} />
             </Worker>
           </div>
         );
-      case 'image':
+      case "image":
         return (
           <div className="doc-viewer p-6">
             <img src={fileUrl} alt="File" />
           </div>
         );
-      case 'video':
+      case "video":
         return (
           <div className="doc-viewer p-6">
             <video controls>
@@ -84,15 +86,15 @@ const DocViewerPage = () => {
   };
 
   return (
-    <div className="doc-viewer p-6">
-      <Link to={`/uc/${sigla}/conteudo`}>
-        <Button 
-            className="mb-4 py-2 px-4 bg-blue-500rounded"
-        >
-            Voltar para Conteúdo
+    <div className="doc-viewer min-w-full p-6">
+      <Link to={`/uc/${sigla}/conteudo`} className="justify-center flex">
+        <Button className="mb-4 py-2 px-4 rounded ">
+          Voltar para Conteúdo
         </Button>
       </Link>
-      {fileUrl ? renderFile() : <p>A carregar documento...</p>}
+      <div className="min-w-full flex justify-center items-center">
+        {fileUrl ? renderFile() : <p>A carregar documento...</p>}
+      </div>
     </div>
   );
 };

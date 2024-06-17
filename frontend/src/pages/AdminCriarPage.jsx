@@ -10,6 +10,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminCriarPage = ({ isNew = false }) => {
   const { email } = useParams();
+  const navigate = useNavigate();
+  const { user: meUser } = useAuth();
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -18,8 +20,6 @@ const AdminCriarPage = ({ isNew = false }) => {
     course: "",
     department: "",
   });
-  const { user: meUser } = useAuth();
-  const navigate = useNavigate();
 
   const roleOptions = [
     { value: "student", display: "Estudante" },
@@ -56,7 +56,7 @@ const AdminCriarPage = ({ isNew = false }) => {
 
   const handleRoleChange = (e) => {
     setUser({ ...user, role: e.target.value });
-  }
+  };
 
   const handleImageChange = (e) => {
     setUser({ ...user, avatar: e.target.files[0] });
@@ -65,14 +65,15 @@ const AdminCriarPage = ({ isNew = false }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
-      for (const key in user) {
-        formData.append(key, user[key]);
-      }
+      let formData = new FormData();
+      formData.append("teste", "boas");
+      // for (const key in user) {
+      //   formData.append(key, user[key]);
+      // }
 
       if (isNew) {
-        user["password"] = "12345";
-        await userService.createAUser(user);
+        formData.append("password", "12345");
+        await userService.createAUser(formData);
         alert("Utilizador criado com sucesso.");
         window.location.href = "/admin";
       } else {
