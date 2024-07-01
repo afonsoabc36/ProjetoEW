@@ -22,6 +22,7 @@ const DocViewerPage = () => {
         if (response.status === 200) {
           const blob = await response.data;
           const url = URL.createObjectURL(blob);
+          console.log(url)
           setFileUrl(url);
         } else {
           console.error("Failed to fetch the file");

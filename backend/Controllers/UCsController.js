@@ -85,6 +85,7 @@ const insertDoc = async (req, res) => {
   try {
     const sigla = req.params.sigla;
     const folderName = req.body.folderName;
+    console.log(sigla, folderName)
 
     const uc = await UC.findOne({ sigla }).exec();
     if (!uc) {
@@ -94,18 +95,34 @@ const insertDoc = async (req, res) => {
     let folderIndex = uc.conteudo.findIndex(
       (folder) => folder.nome === folderName
     );
+    console.log(folderIndex)
     if (folderIndex === -1) {
       uc.conteudo.push({ nome: folderName, docs: [] });
       folderIndex = uc.conteudo.length - 1;
     }
-
+    console.log(uc.conteudo[folderIndex])
+    console.log(req.file.originalname)
+    console.log(req.file.path)
     uc.conteudo[folderIndex].docs.push({
       nome: req.file.originalname,
       path: req.file.path,
     });
+    console.log(uc.conteudo[folderIndex])
+    console.log('here')
 
-    await uc.save();
-    res.status(201).json(uc);
+    uc.markModified('conteudo');
+    console.log('here1')
+    uc.conteudo[folderIndex].markModified('docs');
+    console.log('here2')
+
+    try {
+      await uc.save();
+      console.log('UC saved successfully');
+      res.status(201).json(uc);
+    } catch (saveError) {
+      console.error('Error saving UC:', saveError);
+      res.status(500).json({ message: 'Error saving UC', error: saveError.message });
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
